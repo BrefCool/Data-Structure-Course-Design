@@ -1,0 +1,6 @@
+E:\CODE\SHMetro\SHMetroApp\SHMetroApp\bin\Debug\SHMetroApp.exe
+E:\CODE\SHMetro\SHMetroApp\SHMetroApp\bin\Debug\SHMetroApp.pdb
+E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.Properties.Resources.resources
+E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.csproj.GenerateResource.Cache
+E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.exe
+E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.pdb
