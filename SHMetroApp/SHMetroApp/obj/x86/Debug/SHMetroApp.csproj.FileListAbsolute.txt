@@ -4,3 +4,5 @@ E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.Properties.Resour
 E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.csproj.GenerateResource.Cache
 E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.exe
 E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.pdb
+E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.Form1.resources
+E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.MetroGraphView.resources

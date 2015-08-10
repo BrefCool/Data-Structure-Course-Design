@@ -53,12 +53,24 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <Compile Include="MetroGraph.cs" />
+    <Compile Include="MetroGraphView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="MetroGraphView.Designer.cs">
+      <DependentUpon>MetroGraphView.cs</DependentUpon>
+    </Compile>
     <Compile Include="MetroLine.cs" />
     <Compile Include="MetroLink.cs" />
     <Compile Include="MetroNode.cs" />
     <Compile Include="MetroPath.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MetroGraphView.resx">
+      <DependentUpon>MetroGraphView.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>

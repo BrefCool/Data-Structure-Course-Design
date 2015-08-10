@@ -48,13 +48,6 @@ namespace SHMetroApp
 
         #region 方法
             
-            //构造函数
-            public MetroGraph(List<MetroNode> nodes, List<MetroLine> lines)
-            {
-                _mNodes = nodes;
-                _mLines = lines;
-            }
-            
             //添加站点
             public bool addNode(MetroNode newNode)
             {
