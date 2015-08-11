@@ -14,6 +14,7 @@ namespace SHMetroApp
             private MetroNode _mNode2;
             private MetroLine _mLine;
             private int _mWeight = 1;
+            private int _mFlag;
 
         #endregion
 
@@ -46,20 +47,24 @@ namespace SHMetroApp
                 get { return _mWeight; }
             }
 
+            //0与-1表示正反方向（相同两站只有一条路径），1，2...表示第一，第二...条路径
+            public int Flag
+            {
+                get { return _mFlag; }
+                set { _mFlag = value; }
+            }
+
         #endregion
 
         #region 方法
 
             //构造函数
-            public MetroLink(MetroNode node1, MetroNode node2, MetroLine line)
+            public MetroLink(MetroNode node1, MetroNode node2, MetroLine line, int flag)
             {
-                if (line == null) throw new ArgumentNullException("error!(line)");
-                if (node1 == null) throw new ArgumentNullException("error!(node)");
-                if (node2 == null) throw new ArgumentNullException("error!(node)");
-
                 this.Node1 = node1;
                 this.Node2 = node2;
                 this.Line = line;
+                this.Flag = flag;
             }
 
             //判断路径是否与规定站点直接关联

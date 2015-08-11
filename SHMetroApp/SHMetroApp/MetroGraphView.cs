@@ -147,10 +147,10 @@ namespace SHMetroApp
 
                     MetroLine line = this.Graph.Lines.Find(delegate(MetroLine l)
                     {
-                        return l.Name == linkNode.Attributes["Line"].Value
+                        return l.Name == linkNode.Attributes["Line"].Value;
                     });
 
-                    node1.Links.Add(new MetroLink(node1,node2,line));
+                    node1.Links.Add(new MetroLink(node1, node2, line, int.Parse(linkNode.Attributes["Flag"].Value)));
                 }
             }
 
@@ -196,6 +196,7 @@ namespace SHMetroApp
                     addAtrribute(linkNode, "To", (link.Node1.Name == node.Name) ? link.Node2.Name : link.Node1.Name);
                     addAtrribute(linkNode, "Line", link.Line.Name);
                     addAtrribute(linkNode, "Weight", link.Weight.ToString());
+                    addAtrribute(linkNode, "Flag", link.Flag.ToString());
                 }
             }
 
@@ -269,20 +270,58 @@ namespace SHMetroApp
             private void paintGraph(Graphics g, MetroGraph Graph)
             {
                 //绘制站点
-                paintNodes(g, Graph);
+                foreach (var node in Graph.Nodes)
+                {
+                    paintNode(g, node);
+                }                
 
                 //绘制路径
-                paintLinks(g, Graph);
+                foreach (var link in Graph.Links.Where(f => f.Flag >= 0))
+                {
+                    paintLink(g, link);
+                }
             }
 
-            private void paintLinks(Graphics g, MetroGraph Graph)
+            private void paintLink(Graphics g, MetroLink Link)
             {
-                throw new NotImplementedException();
+                Point p1 = new Point(Link.Node1.X, Link.Node1.Y);
+                Point p2 = new Point(Link.Node2.X, Link.Node2.Y);
+
+                using(Pen pen = new Pen(Link.Line.LineColor,5))
+                {
+                    pen.LineJoin = LineJoin.Round;
+                    if (Link.Flag == 0)
+                    {
+                        g.DrawLine(pen, p1, p2);
+                    }
+                    else if (Link.Flag > 0)
+                    {
+                        float 
+                    }
+                }
+                
             }
 
-            private void paintNodes(Graphics g, MetroGraph Graph)
+            private float getDistance(Point p1, Point p2)
             {
-                throw new NotImplementedException();
+                return (float)Math.Sqrt((p1.X - p2.X) * (p1.X - p2.X) + (p1.Y - p2.Y) * (p1.Y - p2.Y));
+            }
+            
+            private void paintNode(Graphics g, MetroNode Node)
+            {
+                int count = Node.Links.Count;
+                Color color = count > 2 ? Color.Black : Node.Links[0].Line.LineColor;
+                int r = count > 2 ? 8 : 5;
+                Rectangle rc = new Rectangle(Node.X - r, Node.Y - r, Node.X + r, Node.Y + r);
+                g.FillEllipse(Brushes.White, rc);
+                using (Pen pen = new Pen(color))
+                {
+                    g.DrawEllipse(pen, rc);
+                }
+
+                var sz = g.MeasureString(Node.Name, this.Font).ToSize();
+                Point pt = new Point(Node.X - sz.Width / 2, Node.Y + (rc.Height >> 1) + 4);
+                g.DrawString(Node.Name, Font, Brushes.Black, pt);
             } 
             
         #endregion
