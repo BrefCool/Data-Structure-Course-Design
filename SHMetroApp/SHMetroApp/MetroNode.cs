@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.ComponentModel;
 
 namespace SHMetroApp
 {
-    class MetroNode
+    public class MetroNode
     {
         //地铁站点类
         #region 字段

@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SHMetroApp
 {
-    class MetroLink
+    public class MetroLink
     {
         //地铁路径类，对应站点间的连接线路
         #region 字段

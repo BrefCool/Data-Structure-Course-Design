@@ -6,7 +6,7 @@ using System.Drawing;
 
 namespace SHMetroApp
 {
-    class MetroLine
+    public class MetroLine
     {
         //地铁总路线类
         #region 字段

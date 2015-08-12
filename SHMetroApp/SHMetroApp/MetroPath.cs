@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SHMetroApp
 {
-    class MetroPath
+    public class MetroPath
     {
     }
 }

@@ -23,12 +23,15 @@ namespace SHMetroApp
         private MetroNode _startNode;
         private MetroNode _endNode;
         private MetroPath _shortestPath;
+        private Point _mouseLastLocation = Point.Empty;
+        private Point _mouseDownLocation = Point.Empty;
 
     #endregion
         
     #region 属性
 
         //获取地铁线路图
+        [Browsable(false)]
         public MetroGraph Graph
         {
             get { return _Graph; }
@@ -38,21 +41,33 @@ namespace SHMetroApp
         public int scrollX
         {
             get { return _scrollX; }
-            set { _scrollX = value; }
+            set 
+            { 
+                _scrollX = value;
+                Invalidate();
+            }
         }
 
         //获取竖直滚动量
         public int scrollY
         {
             get { return _scrollY; }
-            set { _scrollY = value; }
+            set 
+            {
+                _scrollY = value;
+                Invalidate();
+            }
         }
 
         //获取缩放比例
         public float zoomScale
         {
             get { return _zoomScale; }
-            set { _zoomScale = value; }
+            set 
+            { 
+                _zoomScale = value;
+                Invalidate();
+            }
         }
 
         //获取线路图当前的状态（是否可编辑）
@@ -62,6 +77,7 @@ namespace SHMetroApp
         }
 
         //获取或设置起始站点
+        [Browsable(false)]
         public MetroNode startNode
         {
             get { return _startNode; }
@@ -69,6 +85,7 @@ namespace SHMetroApp
         }
 
         //获取或设置目的站点
+        [Browsable(false)]
         public MetroNode endNode
         {
             get { return _endNode; }
@@ -76,6 +93,7 @@ namespace SHMetroApp
         }
 
         //获取或设置最短路径
+        [Browsable(false)]
         public MetroPath shortestPath
         {
             get { return _shortestPath; }
@@ -90,6 +108,10 @@ namespace SHMetroApp
         public MetroGraphView()
         {
             InitializeComponent();
+
+            //优化绘图
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer
+                | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
         }
 
         //切换线路图的编辑状态
@@ -135,7 +157,7 @@ namespace SHMetroApp
             {
                 MetroNode node1 = this.Graph.Nodes.Find(delegate(MetroNode node)
                 {
-                    return node.Name == nodeNode.Name;
+                    return node.Name == nodeNode.Attributes["Name"].Value;
                 });
 
                 foreach (System.Xml.XmlNode linkNode in nodeNode.SelectNodes("Link"))
@@ -226,6 +248,8 @@ namespace SHMetroApp
             {
                 base.OnPaint(e);
 
+                e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+
                 //线路图的移动和缩放
                 e.Graphics.TranslateTransform(this.scrollX, this.scrollY);
                 e.Graphics.ScaleTransform(this.zoomScale, this.zoomScale);
@@ -269,16 +293,16 @@ namespace SHMetroApp
 
             private void paintGraph(Graphics g, MetroGraph Graph)
             {
-                //绘制站点
-                foreach (var node in Graph.Nodes)
-                {
-                    paintNode(g, node);
-                }                
-
                 //绘制路径
                 foreach (var link in Graph.Links.Where(f => f.Flag >= 0))
                 {
                     paintLink(g, link);
+                }
+
+                //绘制站点
+                foreach (var node in Graph.Nodes)
+                {
+                    paintNode(g, node);
                 }
             }
 
@@ -296,10 +320,30 @@ namespace SHMetroApp
                     }
                     else if (Link.Flag > 0)
                     {
-                        float 
+                        float scale = (pen.Width / 2) / getDistance(p1, p2);
+
+                        float angle = (float)(Math.PI / 2);
+                        if (Link.Flag == 2) angle *= -1;
+
+                        //平移线段
+                        var pt3 = Rotate(p2, p1, angle, scale);
+                        var pt4 = Rotate(p1, p2, -angle, scale);
+
+                        g.DrawLine(pen, pt3, pt4); 
                     }
                 }
                 
+            }
+
+            private Point Rotate(Point v, Point o, float angle, float scale)
+            {
+                v.X -= o.X;
+                v.Y -= o.Y;
+                double rx = scale * Math.Cos(angle);
+                double ry = scale * Math.Sin(angle);
+                double x = o.X + v.X * rx - v.Y * ry;
+                double y = o.Y + v.X * ry + v.Y * rx;
+                return new Point((int)x, (int)y);
             }
 
             private float getDistance(Point p1, Point p2)
@@ -312,7 +356,7 @@ namespace SHMetroApp
                 int count = Node.Links.Count;
                 Color color = count > 2 ? Color.Black : Node.Links[0].Line.LineColor;
                 int r = count > 2 ? 8 : 5;
-                Rectangle rc = new Rectangle(Node.X - r, Node.Y - r, Node.X + r, Node.Y + r);
+                Rectangle rc = new Rectangle(Node.X - r, Node.Y - r, 2 * r, 2 * r);
                 g.FillEllipse(Brushes.White, rc);
                 using (Pen pen = new Pen(color))
                 {
@@ -326,6 +370,35 @@ namespace SHMetroApp
             
         #endregion
 
+        #region 事件区域
+
+            protected override void OnMouseDown(MouseEventArgs e)
+            {
+                _mouseDownLocation = e.Location;
+                _mouseLastLocation = e.Location;
+            }
+
+            protected override void OnMouseUp(MouseEventArgs e)
+            {
+                Invalidate();
+            }
+
+            protected override void OnMouseMove(MouseEventArgs e)
+            {
+                if (e.Button == MouseButtons.Left)
+                {
+                    this.scrollX += e.X - _mouseLastLocation.X;
+                    this.scrollY += e.Y - _mouseLastLocation.Y;
+                    _mouseLastLocation = e.Location;
+                }
+            }
+
+            protected override void OnMouseWheel(MouseEventArgs e)
+            {
+                this.zoomScale += (e.Delta > 0 ? 0.1f : -0.1f);
+            }
+            
+        #endregion
     #endregion
     }
 }

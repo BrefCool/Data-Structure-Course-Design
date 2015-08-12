@@ -5,7 +5,7 @@ using System.Text;
 
 namespace SHMetroApp
 {
-    class MetroGraph
+    public class MetroGraph
     {
         //地铁线路图类
         #region 字段
