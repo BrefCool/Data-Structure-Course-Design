@@ -20,6 +20,7 @@ namespace SHMetroApp
         private int _scrollY;
         private float _zoomScale = 1;
         private bool _editStatus = false;
+        private MetroNode _clickNode;
         private MetroNode _startNode;
         private MetroNode _endNode;
         private MetroPath _shortestPath;
@@ -27,11 +28,13 @@ namespace SHMetroApp
         private Point _mouseDownLocation = Point.Empty;
 
     #endregion
+
+        public delegate void valueChangedHandler(object sender, EventArgs e);
+        public event valueChangedHandler clickNodeChanged;
         
     #region 属性
 
         //获取地铁线路图
-        [Browsable(false)]
         public MetroGraph Graph
         {
             get { return _Graph; }
@@ -76,16 +79,21 @@ namespace SHMetroApp
             get { return _editStatus; }
         }
 
+        //获取或设置所点击站点（编辑模式使用)
+        public MetroNode clickNode
+        {
+            get { return _clickNode; }
+            set { _clickNode = value; }
+        }
+
         //获取或设置起始站点
-        [Browsable(false)]
         public MetroNode startNode
         {
             get { return _startNode; }
-            set { _startNode = startNode; }
+            set { _startNode = value; }
         }
 
         //获取或设置目的站点
-        [Browsable(false)]
         public MetroNode endNode
         {
             get { return _endNode; }
@@ -93,7 +101,6 @@ namespace SHMetroApp
         }
 
         //获取或设置最短路径
-        [Browsable(false)]
         public MetroPath shortestPath
         {
             get { return _shortestPath; }
@@ -242,6 +249,21 @@ namespace SHMetroApp
             return attribute;
         }
 
+        //获取点击的节点
+        public MetroNode getNodeFromClickLocation(Point clickLocation)
+        {
+            Point newLocation = new Point((int)((clickLocation.X - this.scrollX) / this.zoomScale),
+                (int)((clickLocation.Y - this.scrollY) / this.zoomScale));
+            return this.Graph.Nodes.Find(n => getNodeArea(n).Contains(newLocation));
+        }
+
+        //获取每个节点的有效点击区域
+        private Rectangle getNodeArea(MetroNode node)
+        {
+            int r = node.Links.Count > 2 ? 8 : 5;
+            return new Rectangle(node.X - r, node.Y - r, 2 * r, 2 * r);
+        }
+
         #region 绘图区域
 
             protected override void OnPaint(PaintEventArgs e)
@@ -380,6 +402,25 @@ namespace SHMetroApp
 
             protected override void OnMouseUp(MouseEventArgs e)
             {
+                var node = getNodeFromClickLocation(e.Location);
+                if (node != null)
+                {
+                    if (this.editStatus)
+                    {
+                        this.clickNode = node;
+                        clickNodeChanged(this.clickNode, new EventArgs());
+                    }
+                    else
+                    {
+                        if (this.startNode == null)
+                            this.startNode = node;
+                        else
+                        {
+                            this.endNode = node;
+                        }
+                    }
+                }
+
                 Invalidate();
             }
 

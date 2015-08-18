@@ -32,15 +32,16 @@
             this.menuStrip1 = new System.Windows.Forms.MenuStrip();
             this.editMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.帮助ToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.editGroup = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.editGroup = new System.Windows.Forms.Panel();
+            this.nodeNameLabel = new System.Windows.Forms.Label();
+            this.nodeNameBox = new System.Windows.Forms.TextBox();
+            this.XLabel = new System.Windows.Forms.Label();
+            this.X_textBox = new System.Windows.Forms.TextBox();
+            this.YLabel = new System.Windows.Forms.Label();
+            this.Y_textBox = new System.Windows.Forms.TextBox();
+            this.saveBtn = new System.Windows.Forms.Button();
+            this.cancelBtn = new System.Windows.Forms.Button();
             this.metroGraphView = new SHMetroApp.MetroGraphView();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
             this.menuStrip1.SuspendLayout();
             this.editGroup.SuspendLayout();
             this.SuspendLayout();
@@ -71,38 +72,91 @@
             // 
             // editGroup
             // 
-            this.editGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.editGroup.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.editGroup.Controls.Add(this.textBox3);
-            this.editGroup.Controls.Add(this.label4);
-            this.editGroup.Controls.Add(this.textBox2);
-            this.editGroup.Controls.Add(this.label3);
-            this.editGroup.Controls.Add(this.label2);
-            this.editGroup.Controls.Add(this.textBox1);
-            this.editGroup.Controls.Add(this.label1);
-            this.editGroup.Location = new System.Drawing.Point(571, 31);
+            this.editGroup.Controls.Add(this.cancelBtn);
+            this.editGroup.Controls.Add(this.saveBtn);
+            this.editGroup.Controls.Add(this.Y_textBox);
+            this.editGroup.Controls.Add(this.YLabel);
+            this.editGroup.Controls.Add(this.X_textBox);
+            this.editGroup.Controls.Add(this.XLabel);
+            this.editGroup.Controls.Add(this.nodeNameBox);
+            this.editGroup.Controls.Add(this.nodeNameLabel);
+            this.editGroup.Location = new System.Drawing.Point(12, 394);
             this.editGroup.Name = "editGroup";
-            this.editGroup.Size = new System.Drawing.Size(237, 408);
+            this.editGroup.Size = new System.Drawing.Size(796, 45);
             this.editGroup.TabIndex = 2;
-            this.editGroup.TabStop = false;
-            this.editGroup.Text = "编辑面板";
             this.editGroup.Visible = false;
             // 
-            // label1
+            // nodeNameLabel
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 54);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(82, 15);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "站点名称：";
+            this.nodeNameLabel.AutoSize = true;
+            this.nodeNameLabel.Location = new System.Drawing.Point(3, 16);
+            this.nodeNameLabel.Name = "nodeNameLabel";
+            this.nodeNameLabel.Size = new System.Drawing.Size(82, 15);
+            this.nodeNameLabel.TabIndex = 0;
+            this.nodeNameLabel.Text = "站点名称：";
             // 
-            // textBox1
+            // nodeNameBox
             // 
-            this.textBox1.Location = new System.Drawing.Point(94, 51);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(137, 25);
-            this.textBox1.TabIndex = 1;
+            this.nodeNameBox.Location = new System.Drawing.Point(91, 13);
+            this.nodeNameBox.Name = "nodeNameBox";
+            this.nodeNameBox.Size = new System.Drawing.Size(168, 25);
+            this.nodeNameBox.TabIndex = 1;
+            // 
+            // XLabel
+            // 
+            this.XLabel.AutoSize = true;
+            this.XLabel.Location = new System.Drawing.Point(277, 16);
+            this.XLabel.Name = "XLabel";
+            this.XLabel.Size = new System.Drawing.Size(30, 15);
+            this.XLabel.TabIndex = 2;
+            this.XLabel.Text = "X：";
+            // 
+            // X_textBox
+            // 
+            this.X_textBox.Location = new System.Drawing.Point(313, 13);
+            this.X_textBox.Name = "X_textBox";
+            this.X_textBox.Size = new System.Drawing.Size(100, 25);
+            this.X_textBox.TabIndex = 3;
+            // 
+            // YLabel
+            // 
+            this.YLabel.AutoSize = true;
+            this.YLabel.Location = new System.Drawing.Point(419, 16);
+            this.YLabel.Name = "YLabel";
+            this.YLabel.Size = new System.Drawing.Size(30, 15);
+            this.YLabel.TabIndex = 4;
+            this.YLabel.Text = "Y：";
+            // 
+            // Y_textBox
+            // 
+            this.Y_textBox.Location = new System.Drawing.Point(455, 13);
+            this.Y_textBox.Name = "Y_textBox";
+            this.Y_textBox.Size = new System.Drawing.Size(100, 25);
+            this.Y_textBox.TabIndex = 5;
+            // 
+            // saveBtn
+            // 
+            this.saveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.saveBtn.Location = new System.Drawing.Point(620, 12);
+            this.saveBtn.Name = "saveBtn";
+            this.saveBtn.Size = new System.Drawing.Size(75, 23);
+            this.saveBtn.TabIndex = 6;
+            this.saveBtn.Text = "保存";
+            this.saveBtn.UseVisualStyleBackColor = true;
+            this.saveBtn.Click += new System.EventHandler(this.saveBtn_Click);
+            // 
+            // cancelBtn
+            // 
+            this.cancelBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.cancelBtn.Location = new System.Drawing.Point(718, 12);
+            this.cancelBtn.Name = "cancelBtn";
+            this.cancelBtn.Size = new System.Drawing.Size(75, 23);
+            this.cancelBtn.TabIndex = 7;
+            this.cancelBtn.Text = "取消";
+            this.cancelBtn.UseVisualStyleBackColor = true;
+            this.cancelBtn.Click += new System.EventHandler(this.cancelBtn_Click);
             // 
             // metroGraphView
             // 
@@ -111,6 +165,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.metroGraphView.BackColor = System.Drawing.Color.White;
             this.metroGraphView.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            this.metroGraphView.clickNode = null;
             this.metroGraphView.endNode = null;
             this.metroGraphView.Location = new System.Drawing.Point(12, 31);
             this.metroGraphView.Name = "metroGraphView";
@@ -121,47 +176,6 @@
             this.metroGraphView.startNode = null;
             this.metroGraphView.TabIndex = 0;
             this.metroGraphView.zoomScale = 1F;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(9, 113);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(82, 15);
-            this.label2.TabIndex = 2;
-            this.label2.Text = "站点位置：";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(12, 159);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(23, 15);
-            this.label3.TabIndex = 3;
-            this.label3.Text = "X:";
-            // 
-            // textBox2
-            // 
-            this.textBox2.Location = new System.Drawing.Point(41, 156);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.Size = new System.Drawing.Size(77, 25);
-            this.textBox2.TabIndex = 4;
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(125, 159);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(23, 15);
-            this.label4.TabIndex = 5;
-            this.label4.Text = "Y:";
-            // 
-            // textBox3
-            // 
-            this.textBox3.Location = new System.Drawing.Point(149, 156);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.Size = new System.Drawing.Size(77, 25);
-            this.textBox3.TabIndex = 6;
             // 
             // Form1
             // 
@@ -193,14 +207,15 @@
         private System.Windows.Forms.MenuStrip menuStrip1;
         private System.Windows.Forms.ToolStripMenuItem editMenuItem;
         private System.Windows.Forms.ToolStripMenuItem 帮助ToolStripMenuItem;
-        private System.Windows.Forms.GroupBox editGroup;
-        private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox textBox1;
-        private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Panel editGroup;
+        private System.Windows.Forms.Button cancelBtn;
+        private System.Windows.Forms.Button saveBtn;
+        private System.Windows.Forms.TextBox Y_textBox;
+        private System.Windows.Forms.Label YLabel;
+        private System.Windows.Forms.TextBox X_textBox;
+        private System.Windows.Forms.Label XLabel;
+        private System.Windows.Forms.TextBox nodeNameBox;
+        private System.Windows.Forms.Label nodeNameLabel;
     }
 }
 

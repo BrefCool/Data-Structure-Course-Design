@@ -6,3 +6,4 @@ E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.exe
 E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.pdb
 E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.Form1.resources
 E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.MetroGraphView.resources
+E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.csprojResolveAssemblyReference.cache
