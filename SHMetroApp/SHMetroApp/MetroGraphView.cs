@@ -29,9 +29,13 @@ namespace SHMetroApp
 
     #endregion
 
+    #region 委托（用于自定义事件）
+        
         public delegate void valueChangedHandler(object sender, EventArgs e);
         public event valueChangedHandler clickNodeChanged;
-        
+    
+    #endregion
+
     #region 属性
 
         //获取地铁线路图
@@ -221,7 +225,7 @@ namespace SHMetroApp
                 //保存与站点相关路径
                 foreach (var link in node.Links)
                 {
-                    var linkNode = addChildNode(nodes, "Link");
+                    var linkNode = addChildNode(nodeNode, "Link");
                     addAtrribute(linkNode, "To", (link.Node1.Name == node.Name) ? link.Node2.Name : link.Node1.Name);
                     addAtrribute(linkNode, "Line", link.Line.Name);
                     addAtrribute(linkNode, "Weight", link.Weight.ToString());
@@ -393,7 +397,7 @@ namespace SHMetroApp
         #endregion
 
         #region 事件区域
-
+            
             protected override void OnMouseDown(MouseEventArgs e)
             {
                 _mouseDownLocation = e.Location;
@@ -409,6 +413,13 @@ namespace SHMetroApp
                     {
                         this.clickNode = node;
                         clickNodeChanged(this.clickNode, new EventArgs());
+                        if (e.Button == MouseButtons.Right)
+                        {
+                            ContextMenuStrip cms = new ContextMenuStrip();
+                            Bitmap bm = new Bitmap(Application.StartupPath + "\\delete.ico");
+                            cms.Items.Add("删除站点", bm,new EventHandler(deleteNode));
+                            cms.Show(this, e.X, e.Y);
+                        }
                     }
                     else
                     {
@@ -424,13 +435,61 @@ namespace SHMetroApp
                 Invalidate();
             }
 
+            public void deleteNode(object sender, EventArgs e)
+            {
+
+            }
+
             protected override void OnMouseMove(MouseEventArgs e)
             {
-                if (e.Button == MouseButtons.Left)
+                if (this.editStatus)
                 {
-                    this.scrollX += e.X - _mouseLastLocation.X;
-                    this.scrollY += e.Y - _mouseLastLocation.Y;
-                    _mouseLastLocation = e.Location;
+                    var node = getNodeFromClickLocation(e.Location);
+                    if (node != null)
+                    {
+                        this.Cursor = Cursors.SizeAll;
+                    }
+                    else
+                    {
+                        this.Cursor = Cursors.Default;
+                        
+                        var lastNode = getNodeFromClickLocation(_mouseLastLocation);
+                        if (e.Button == MouseButtons.Left)
+                        {
+                            if (lastNode == null)
+                            {
+                                this.scrollX += e.X - _mouseLastLocation.X;
+                                this.scrollY += e.Y - _mouseLastLocation.Y;
+                            }
+                            else
+                            {
+                                lastNode.X = (int)((e.X - this.scrollX) / this.zoomScale);
+                                lastNode.Y = (int)((e.Y - this.scrollY) / this.zoomScale);
+                                clickNodeChanged(lastNode, new EventArgs());
+                                Invalidate();
+                            }
+                            _mouseLastLocation = e.Location;
+                        }
+                    }
+                }
+                else
+                {
+                    var node = getNodeFromClickLocation(e.Location);
+                    if (node != null)
+                    {
+                        this.Cursor = Cursors.Hand;
+                    }
+                    else
+                    {
+                        this.Cursor = Cursors.Default;
+
+                        if (e.Button == MouseButtons.Left)
+                        {
+                            this.scrollX += e.X - _mouseLastLocation.X;
+                            this.scrollY += e.Y - _mouseLastLocation.Y;
+                            _mouseLastLocation = e.Location;
+                        }
+                    }
                 }
             }
 
