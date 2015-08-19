@@ -146,7 +146,7 @@ namespace SHMetroApp
             var graph = xmlDoc.DocumentElement;
             this.scrollX = int.Parse(graph.Attributes["ScrollX"].Value);
             this.scrollY = int.Parse(graph.Attributes["ScrollY"].Value);
-            this.zoomScale = int.Parse(graph.Attributes["ZoomScale"].Value);
+            this.zoomScale = float.Parse(graph.Attributes["ZoomScale"].Value);
 
             //读取总线路
             this.Graph.Lines.Clear();
@@ -380,7 +380,7 @@ namespace SHMetroApp
             private void paintNode(Graphics g, MetroNode Node)
             {
                 int count = Node.Links.Count;
-                Color color = count > 2 ? Color.Black : Node.Links[0].Line.LineColor;
+                Color color = (count > 2 || count == 0) ? Color.Black : Node.Links[0].Line.LineColor;
                 int r = count > 2 ? 8 : 5;
                 Rectangle rc = new Rectangle(Node.X - r, Node.Y - r, 2 * r, 2 * r);
                 g.FillEllipse(Brushes.White, rc);
@@ -431,11 +431,54 @@ namespace SHMetroApp
                         }
                     }
                 }
+                else
+                {
+                    if (this.editStatus)
+                    {
+                        if (e.Button == MouseButtons.Right)
+                        {
+                            ContextMenuStrip cms = new ContextMenuStrip();
+                            cms.Items.Add("新建站点", null, new EventHandler(createNode));
+                            cms.Items.Add("新建线路", null, new EventHandler(createLine));
+                            cms.Show(this, e.X, e.Y);
+                            _mouseLastLocation = e.Location;
+                        }
+                    }
+                }
 
                 Invalidate();
             }
 
-            public void deleteNode(object sender, EventArgs e)
+            private void deleteNode(object sender, EventArgs e)
+            {
+                foreach (var link in this.clickNode.Links)
+                {
+                    MetroNode tmpNode = (link.Node1.Name == this.clickNode.Name) ? link.Node2 : link.Node1;
+                    foreach (var tmplink in tmpNode.Links)
+                    {
+                        if (tmplink.Node1.Name == this.clickNode.Name || tmplink.Node2.Name == this.clickNode.Name)
+                        {
+                            tmpNode.deleteLink(tmplink);
+                            break;
+                        }
+                    }
+                }
+
+                Graph.deleteNode(this.clickNode);
+                Invalidate();
+            }
+
+            private void createNode(object sender, EventArgs e)
+            {
+                Point insertLocation = _mouseLastLocation;
+                MetroNode newNode = new MetroNode("新的站点", (int)((insertLocation.X - this.scrollX) / this.zoomScale),
+                    (int)((insertLocation.Y - scrollY) / this.zoomScale));
+
+                Graph.addNode(newNode);
+                Invalidate();
+            }
+
+            private void createLine(object sender, EventArgs e)
             {
 
             }

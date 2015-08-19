@@ -16,6 +16,7 @@ namespace SHMetroApp
             InitializeComponent();
 
             metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
+            metroGraphView.Focus();
             metroGraphView.clickNodeChanged += new MetroGraphView.valueChangedHandler(metroGraphView_clickNodeChanged);
         }
 
@@ -42,7 +43,8 @@ namespace SHMetroApp
         {
             if (metroGraphView.clickNode != null)
             {
-                metroGraphView.clickNode.X = int.Parse(X_textBox.Text);
+                if(X_textBox.Text != "")
+                    metroGraphView.clickNode.X = int.Parse(X_textBox.Text);
                 metroGraphView.Invalidate();
             }
         }
@@ -51,7 +53,8 @@ namespace SHMetroApp
         {
             if (metroGraphView.clickNode != null)
             {
-                metroGraphView.clickNode.Y = int.Parse(Y_textBox.Text);
+                if(Y_textBox.Text != "")
+                    metroGraphView.clickNode.Y = int.Parse(Y_textBox.Text);
                 metroGraphView.Invalidate();
             }
         }
@@ -80,6 +83,7 @@ namespace SHMetroApp
 
             metroGraphView.toggleEditStatus();
             metroGraphView.saveGraph(Application.StartupPath + "\\MetroGraph.xml");
+            metroGraphView.Focus();
         }
 
         private void cancelBtn_Click(object sender, EventArgs e)
@@ -95,6 +99,7 @@ namespace SHMetroApp
 
             metroGraphView.toggleEditStatus();
             metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
+            metroGraphView.Focus();
         }
     }
 }
