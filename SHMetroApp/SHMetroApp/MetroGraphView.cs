@@ -25,7 +25,9 @@ namespace SHMetroApp
         private MetroNode _endNode;
         private MetroPath _shortestPath;
         private Point _mouseLastLocation = Point.Empty;
+        private Point _mouseTempLocation = Point.Empty;
         private Point _mouseDownLocation = Point.Empty;
+        private string _keyCode = String.Empty;
 
     #endregion
 
@@ -285,6 +287,21 @@ namespace SHMetroApp
 
                 //绘制总线路标识
                 paintLines(e.Graphics, this.Graph);
+
+                //绘制临时线段
+                paintTempLink(e.Graphics);
+            }
+
+            private void paintTempLink(Graphics g)
+            {
+                if (this._mouseTempLocation != Point.Empty)
+                {
+                    using (Pen pen = new Pen(Color.Black, 5))
+                    {
+                        pen.LineJoin = LineJoin.Round;
+                        g.DrawLine(pen, _mouseLastLocation, _mouseTempLocation);
+                    }
+                }
             }
 
             private void paintLines(Graphics g, MetroGraph Graph)
@@ -402,6 +419,12 @@ namespace SHMetroApp
             {
                 _mouseDownLocation = e.Location;
                 _mouseLastLocation = e.Location;
+
+                var node = getNodeFromClickLocation(e.Location);
+                if (node != null)
+                {
+                    this.clickNode = node;
+                }
             }
 
             protected override void OnMouseUp(MouseEventArgs e)
@@ -411,6 +434,7 @@ namespace SHMetroApp
                 {
                     if (this.editStatus)
                     {
+                        MetroNode tmpNode = this.clickNode;
                         this.clickNode = node;
                         clickNodeChanged(this.clickNode, new EventArgs());
                         if (e.Button == MouseButtons.Right)
@@ -419,6 +443,23 @@ namespace SHMetroApp
                             Bitmap bm = new Bitmap(Application.StartupPath + "\\delete.ico");
                             cms.Items.Add("删除站点", bm,new EventHandler(deleteNode));
                             cms.Show(this, e.X, e.Y);
+                        }
+                        if (e.Button == MouseButtons.Left && this._keyCode == "ControlKey")
+                        {
+                            if (tmpNode != this.clickNode)
+                            {
+                                childForm2 f = new childForm2(this.Graph.Lines);
+                                if (f.ShowDialog() == DialogResult.OK)
+                                {
+                                    MetroLine chosenLine = f.chosenLine;
+                                    MetroLink newLink1 = new MetroLink(tmpNode, this.clickNode, chosenLine, 0);
+                                    MetroLink newLink2 = new MetroLink(this.clickNode, tmpNode, chosenLine, -1);
+                                    tmpNode.addLink(newLink1);
+                                    this.clickNode.addLink(newLink2);
+                                    
+                                }
+                                
+                            }
                         }
                     }
                     else
@@ -446,6 +487,7 @@ namespace SHMetroApp
                     }
                 }
 
+                _mouseTempLocation = Point.Empty;
                 Invalidate();
             }
 
@@ -480,7 +522,13 @@ namespace SHMetroApp
 
             private void createLine(object sender, EventArgs e)
             {
-
+                childForm1 f = new childForm1();
+                if (f.ShowDialog() == DialogResult.OK)
+                {
+                    MetroLine newLine = new MetroLine(f.lineName, f.lineColor);
+                    Graph.addLine(newLine);
+                }
+                Invalidate();
             }
 
             protected override void OnMouseMove(MouseEventArgs e)
@@ -503,15 +551,25 @@ namespace SHMetroApp
                             {
                                 this.scrollX += e.X - _mouseLastLocation.X;
                                 this.scrollY += e.Y - _mouseLastLocation.Y;
+                                _mouseLastLocation = e.Location;
                             }
                             else
                             {
-                                lastNode.X = (int)((e.X - this.scrollX) / this.zoomScale);
-                                lastNode.Y = (int)((e.Y - this.scrollY) / this.zoomScale);
-                                clickNodeChanged(lastNode, new EventArgs());
-                                Invalidate();
+                                if (this._keyCode == "ControlKey")
+                                {
+                                    _mouseTempLocation = e.Location;
+                                    Invalidate();
+                                }
+                                else
+                                {
+                                    lastNode.X = (int)((e.X - this.scrollX) / this.zoomScale);
+                                    lastNode.Y = (int)((e.Y - this.scrollY) / this.zoomScale);
+                                    clickNodeChanged(lastNode, new EventArgs());
+                                    Invalidate();
+                                    _mouseLastLocation = e.Location;
+                                }
                             }
-                            _mouseLastLocation = e.Location;
+                            
                         }
                     }
                 }
@@ -539,6 +597,16 @@ namespace SHMetroApp
             protected override void OnMouseWheel(MouseEventArgs e)
             {
                 this.zoomScale += (e.Delta > 0 ? 0.1f : -0.1f);
+            }
+
+            protected override void OnKeyDown(KeyEventArgs e)
+            {
+                this._keyCode = e.KeyCode.ToString();
+            }
+
+            protected override void OnKeyUp(KeyEventArgs e)
+            {
+                this._keyCode = "";
             }
             
         #endregion
