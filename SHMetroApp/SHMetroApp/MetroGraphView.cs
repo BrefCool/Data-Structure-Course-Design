@@ -23,7 +23,7 @@ namespace SHMetroApp
         private MetroNode _clickNode;
         private MetroNode _startNode;
         private MetroNode _endNode;
-        private MetroPath _shortestPath;
+        private List<MetroPath> _shortestPathsCollection = new List<MetroPath>();
         private Point _mouseLastLocation = Point.Empty;
         private Point _mouseTempLocation = Point.Empty;
         private Point _mouseDownLocation = Point.Empty;
@@ -106,11 +106,10 @@ namespace SHMetroApp
             set { _endNode = value; }
         }
 
-        //获取或设置最短路径
-        public MetroPath shortestPath
+        //获取最短路径集合
+        public List<MetroPath> shortestPathCollection
         {
-            get { return _shortestPath; }
-            set { _shortestPath = value; }
+            get { return _shortestPathsCollection; }
         }
 
     #endregion
@@ -125,6 +124,91 @@ namespace SHMetroApp
             //优化绘图
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer
                 | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
+        }
+
+        //从数据文件中读取线路图中任意两个站点之间的最短路径集合
+        public void prepareShortestPathsCollection(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return;
+
+            if (!System.IO.File.Exists(fileName))
+                return;
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load(fileName);
+
+            var collection = xmlDoc.DocumentElement;
+
+            this.shortestPathCollection.Clear();
+            foreach (System.Xml.XmlNode pathNode in collection.SelectNodes("Paths/Path"))
+            {
+                MetroNode start = this.Graph.Nodes.Find(delegate(MetroNode node)
+                {
+                    return node.Name == pathNode.Attributes["From"].Value;
+                });
+
+                MetroNode end = this.Graph.Nodes.Find(delegate(MetroNode node)
+                {
+                    return node.Name == pathNode.Attributes["To"].Value;
+                });
+
+                MetroPath newPath = new MetroPath(start, end, int.Parse(pathNode.Attributes["Weight"].Value));
+
+                foreach (System.Xml.XmlNode linkNode in pathNode.SelectNodes("Link"))
+                {
+                    MetroNode node1 = this.Graph.Nodes.Find(delegate(MetroNode node)
+                    {
+                        return node.Name == linkNode.Attributes["Node1"].Value;
+                    });
+
+                    MetroNode node2 = this.Graph.Nodes.Find(delegate(MetroNode node)
+                    {
+                        return node.Name == linkNode.Attributes["Node2"].Value;
+                    });
+
+                    MetroLine line = this.Graph.Lines.Find(delegate(MetroLine l)
+                    {
+                        return l.Name == linkNode.Attributes["Line"].Value;
+                    });
+
+                    newPath.links.Add(new MetroLink(node1, node2, line, int.Parse(linkNode.Attributes["Flag"].Value)));
+                }
+
+                this.shortestPathCollection.Add(newPath);
+            }
+        }
+
+        //将最短路径集合保存于相应数据文件中（在编辑更改地铁线路图后触发任意两个站点间最短路径的重算，并保存）
+        public void saveShortestPathsCollection(string fileName)
+        {
+            if (string.IsNullOrEmpty(fileName))
+                return;
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.LoadXml("<?xml version=\"1.0\" encoding=\"gb2312\"?><ShortestPathsCollection/>");
+
+            var collection = xmlDoc.DocumentElement;
+
+            var paths = addChildNode(collection, "Paths");
+            foreach (var shortestPath in shortestPathCollection)
+            {
+                var pathNode = addChildNode(paths, "Path");
+                addAtrribute(pathNode, "From", shortestPath.startNode.ToString());
+                addAtrribute(pathNode, "To", shortestPath.endNode.ToString());
+                addAtrribute(pathNode, "Weight", shortestPath.totalWeight.ToString());
+
+                foreach (var link in shortestPath.links)
+                {
+                    var linkNode = addChildNode(pathNode, "Link");
+                    addAtrribute(linkNode, "Node1", link.Node1.ToString());
+                    addAtrribute(linkNode, "Node2", link.Node2.ToString());
+                    addAtrribute(linkNode, "Line", link.Line.ToString());
+                    addAtrribute(linkNode, "Flag", link.Flag.ToString());
+                }
+            }
+
+            xmlDoc.Save(fileName);
         }
 
         //切换线路图的编辑状态
@@ -268,6 +352,65 @@ namespace SHMetroApp
         {
             int r = node.Links.Count > 2 ? 8 : 5;
             return new Rectangle(node.X - r, node.Y - r, 2 * r, 2 * r);
+        }
+
+        //初始化最短路径集合
+        public void initializeCollection()
+        {
+            foreach (MetroNode start in this.Graph.Nodes)
+            {
+                foreach (MetroNode end in this.Graph.Nodes)
+                {
+                    if (start.Name != end.Name)
+                    {
+                        MetroPath tmpPath = this.shortestPathCollection.Find(delegate(MetroPath path)
+                        {
+                            return (path.startNode.Name == end.Name && path.endNode.Name == start.Name);
+                        });
+                        if (tmpPath == null)
+                        {
+                            MetroPath newPath = new MetroPath(start, end, int.MaxValue);
+                            this.shortestPathCollection.Add(newPath);
+                        }
+                    }
+                }
+            }
+        }
+
+        //计算最短路径
+        public void getShortestPath()
+        {
+            List<MetroNode> nodeList1 = new List<MetroNode>();
+            foreach (MetroNode node1 in this.Graph.Nodes)
+            {
+                nodeList1.Add(node1);
+                MetroLink minLink = node1.Links[0];
+                foreach (MetroLink link in node1.Links)
+                {
+                    MetroPath path = findPath(link);
+                    if (link.Weight < path.totalWeight)
+                    {
+                        path.links.Clear();
+                        path.links.Add(link);
+                        if (link.Weight < minLink.Weight)
+                            minLink = link;
+                    }
+                }
+
+                if (minLink != null)
+                {
+                    nodeList1.Add(minLink.Node2);
+                }
+            }
+        }
+
+        public MetroPath findPath(MetroLink link)
+        {
+            MetroPath path = this.shortestPathCollection.Find(delegate(MetroPath p)
+            {
+                return ((link.Node1 == p.startNode && link.Node2 == p.endNode) || (link.Node1 == p.endNode && link.Node2 == p.startNode));
+            });
+            return path;
         }
 
         #region 绘图区域
