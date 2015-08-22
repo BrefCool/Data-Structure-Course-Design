@@ -174,7 +174,6 @@
             this.metroGraphView.Name = "metroGraphView";
             this.metroGraphView.scrollX = 0;
             this.metroGraphView.scrollY = 0;
-            this.metroGraphView.shortestPath = null;
             this.metroGraphView.Size = new System.Drawing.Size(1417, 620);
             this.metroGraphView.startNode = null;
             this.metroGraphView.TabIndex = 0;

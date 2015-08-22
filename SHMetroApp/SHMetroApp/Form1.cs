@@ -16,6 +16,7 @@ namespace SHMetroApp
             InitializeComponent();
 
             metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
+            metroGraphView.prepareShortestPathsCollection(Application.StartupPath + "\\ShortestPathCollection.xml");
             metroGraphView.Focus();
             metroGraphView.clickNodeChanged += new MetroGraphView.valueChangedHandler(metroGraphView_clickNodeChanged);
         }
@@ -83,6 +84,9 @@ namespace SHMetroApp
 
             metroGraphView.toggleEditStatus();
             metroGraphView.saveGraph(Application.StartupPath + "\\MetroGraph.xml");
+            metroGraphView.initializeCollection();
+            metroGraphView.getShortestPath();
+            metroGraphView.saveShortestPathsCollection(Application.StartupPath + "\\ShortestPathCollection.xml");
             metroGraphView.Focus();
         }
 

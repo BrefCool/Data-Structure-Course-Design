@@ -55,6 +55,15 @@ namespace SHMetroApp
                 endNode = end;
                 totalWeight = total;
             }
+
+            public void changeLinks(MetroPath path)
+            {
+                this.links.Clear();
+                foreach (var link in path.links)
+                {
+                    this.links.Add(link);
+                }
+            }
             
         #endregion
     }

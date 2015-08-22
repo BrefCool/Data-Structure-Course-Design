@@ -357,22 +357,31 @@ namespace SHMetroApp
         //初始化最短路径集合
         public void initializeCollection()
         {
+            this.shortestPathCollection.Clear();
+            int a;
             foreach (MetroNode start in this.Graph.Nodes)
             {
                 foreach (MetroNode end in this.Graph.Nodes)
                 {
-                    if (start.Name != end.Name)
+                    MetroPath tmpPath = this.shortestPathCollection.Find(delegate(MetroPath path)
                     {
-                        MetroPath tmpPath = this.shortestPathCollection.Find(delegate(MetroPath path)
-                        {
-                            return (path.startNode.Name == end.Name && path.endNode.Name == start.Name);
-                        });
-                        if (tmpPath == null)
-                        {
+                        return (path.startNode.Name == end.Name && path.endNode.Name == start.Name);
+                    });
+                    if (tmpPath == null)
+                    {
+                        if (start.Name != end.Name)
+                        {                        
                             MetroPath newPath = new MetroPath(start, end, int.MaxValue);
                             this.shortestPathCollection.Add(newPath);
                         }
+                        else
+                        {
+                            MetroPath newPath = new MetroPath(start, end, 0);
+                            this.shortestPathCollection.Add(newPath);
+                        }
                     }
+                    if(this.shortestPathCollection.Count == 29000)
+                        a = 7;
                 }
             }
         }
@@ -380,35 +389,52 @@ namespace SHMetroApp
         //计算最短路径
         public void getShortestPath()
         {
-            List<MetroNode> nodeList1 = new List<MetroNode>();
+            int a;
+            List<MetroNode> nodeList = new List<MetroNode>();
             foreach (MetroNode node1 in this.Graph.Nodes)
             {
-                nodeList1.Add(node1);
-                MetroLink minLink = node1.Links[0];
-                foreach (MetroLink link in node1.Links)
+                nodeList.Clear();
+                foreach (MetroNode node2 in this.Graph.Nodes)
                 {
-                    MetroPath path = findPath(link);
-                    if (link.Weight < path.totalWeight)
-                    {
-                        path.links.Clear();
-                        path.links.Add(link);
-                        if (link.Weight < minLink.Weight)
-                            minLink = link;
-                    }
+                    if (node2 != node1)
+                        nodeList.Add(node2);
                 }
-
-                if (minLink != null)
+                MetroPath minPath = findPath(node1, node1.Links[0].Node2);
+                MetroNode tmpNode = node1;
+                while (nodeList.Count != 0)
                 {
-                    nodeList1.Add(minLink.Node2);
+                    if (nodeList.Count == 200)
+                        a = 7;
+                    foreach (MetroLink link in tmpNode.Links)
+                    {
+                        MetroPath path = findPath(node1, link.Node2);
+                        MetroPath tmpPath = findPath(node1, link.Node1);
+                        if (tmpPath.totalWeight + link.Weight < path.totalWeight)
+                        {
+                            path.changeLinks(tmpPath);
+                            path.links.Add(link);
+                            path.totalWeight = tmpPath.totalWeight + link.Weight;
+                        }
+                    }
+ 
+                    foreach (MetroNode node in nodeList)
+                    {
+                        MetroPath p = findPath(node1, node);
+                        if(p.totalWeight < minPath.totalWeight)
+                            minPath = p;
+                    }
+                    tmpNode = (minPath.startNode == node1) ? minPath.endNode : minPath.startNode;
+                    nodeList.Remove(tmpNode);
                 }
             }
         }
 
-        public MetroPath findPath(MetroLink link)
+        //查找具体两个站点间最短路径
+        public MetroPath findPath(MetroNode Node1,MetroNode Node2)
         {
             MetroPath path = this.shortestPathCollection.Find(delegate(MetroPath p)
             {
-                return ((link.Node1 == p.startNode && link.Node2 == p.endNode) || (link.Node1 == p.endNode && link.Node2 == p.startNode));
+                return ((Node1 == p.startNode && Node2 == p.endNode) || (Node1 == p.endNode && Node2 == p.startNode));
             });
             return path;
         }
