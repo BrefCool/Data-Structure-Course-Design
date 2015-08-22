@@ -24,6 +24,7 @@ namespace SHMetroApp
         private MetroNode _startNode;
         private MetroNode _endNode;
         private List<MetroPath> _shortestPathsCollection = new List<MetroPath>();
+        //private MetroPathCollection _
         private Point _mouseLastLocation = Point.Empty;
         private Point _mouseTempLocation = Point.Empty;
         private Point _mouseDownLocation = Point.Empty;
@@ -358,7 +359,6 @@ namespace SHMetroApp
         public void initializeCollection()
         {
             this.shortestPathCollection.Clear();
-            int a;
             foreach (MetroNode start in this.Graph.Nodes)
             {
                 foreach (MetroNode end in this.Graph.Nodes)
@@ -380,8 +380,6 @@ namespace SHMetroApp
                             this.shortestPathCollection.Add(newPath);
                         }
                     }
-                    if(this.shortestPathCollection.Count == 29000)
-                        a = 7;
                 }
             }
         }

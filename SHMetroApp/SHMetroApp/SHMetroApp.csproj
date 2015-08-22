@@ -81,6 +81,7 @@
     <Compile Include="MetroLink.cs" />
     <Compile Include="MetroNode.cs" />
     <Compile Include="MetroPath.cs" />
+    <Compile Include="MetroPathCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="childForm1.resx">
