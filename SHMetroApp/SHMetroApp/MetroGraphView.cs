@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using System.Drawing.Drawing2D;
 using System.Xml;
+using System.Diagnostics;
 
 namespace SHMetroApp
 {
@@ -401,12 +402,14 @@ namespace SHMetroApp
                 MetroNode tmpNode = node1;
                 while (nodeList.Count != 0)
                 {
-                    if (nodeList.Count == 200)
+                    Trace.WriteLine(nodeList.Count);
+                    if (nodeList.Count == 230)
                         a = 7;
                     foreach (MetroLink link in tmpNode.Links)
                     {
                         MetroPath path = findPath(node1, link.Node2);
                         MetroPath tmpPath = findPath(node1, link.Node1);
+                        Trace.WriteLine(link.Node1.ToString() + "!?");
                         if (tmpPath.totalWeight + link.Weight < path.totalWeight)
                         {
                             path.changeLinks(tmpPath);
@@ -414,7 +417,7 @@ namespace SHMetroApp
                             path.totalWeight = tmpPath.totalWeight + link.Weight;
                         }
                     }
- 
+                    minPath = findPath(node1, nodeList[0]);
                     foreach (MetroNode node in nodeList)
                     {
                         MetroPath p = findPath(node1, node);

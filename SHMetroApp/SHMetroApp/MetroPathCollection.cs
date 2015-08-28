@@ -17,17 +17,29 @@ namespace SHMetroApp
 
             public MetroPath getShortestPathCollection(string nodeName1, string nodeName2)
             {
-                MetroPath path = _shortestPathCollection["nodeName1"]["nodeName2"];
-                if (path != null)
-                    return path;
-                else
-                    return _shortestPathCollection["nodeName2"]["nodeName1"];
+                if (_shortestPathCollection.ContainsKey(nodeName1))
+                {
+                    if (_shortestPathCollection[nodeName1].ContainsKey(nodeName2))
+                        return _shortestPathCollection[nodeName1][nodeName2];
+                    else
+                        return null;
+                }
+
+                if (_shortestPathCollection.ContainsKey(nodeName2))
+                {
+                    if (_shortestPathCollection.ContainsKey(nodeName1))
+                        return _shortestPathCollection[nodeName2][nodeName1];
+                    else
+                        return null;
+                }
+
+                return null;
             }
 
             public void addShortestPathCollection(MetroPath newPath)
             {
-                if(_shortestPathCollection[newPath.startNode.Name][newPath.endNode.Name] == null &&
-                   _shortestPathCollection[newPath.endNode.Name][newPath.startNode.Name] == null)
+                MetroPath tmpPath = getShortestPathCollection(newPath.startNode.ToString(),newPath.endNode.ToString());
+                if (tmpPath == null)
                 {
                     Dictionary<string, MetroPath> tmpD = new Dictionary<string, MetroPath>();
                     tmpD.Add(newPath.endNode.Name, newPath);
