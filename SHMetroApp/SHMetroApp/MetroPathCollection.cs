@@ -5,11 +5,11 @@ using System.Text;
 
 namespace SHMetroApp
 {
-    class MetroPathCollection
+    public class MetroPathCollection
     {
         #region 字段
 
-            private Dictionary<string, Dictionary<string, MetroPath>> _shortestPathCollection;
+            private Dictionary<string, Dictionary<string, MetroPath>> _shortestPathCollection = new Dictionary<string, Dictionary<string, MetroPath>>();
         
         #endregion
 
@@ -41,9 +41,21 @@ namespace SHMetroApp
                 MetroPath tmpPath = getShortestPathCollection(newPath.startNode.ToString(),newPath.endNode.ToString());
                 if (tmpPath == null)
                 {
-                    Dictionary<string, MetroPath> tmpD = new Dictionary<string, MetroPath>();
-                    tmpD.Add(newPath.endNode.Name, newPath);
-                    _shortestPathCollection.Add(newPath.startNode.Name, tmpD);
+                    if (_shortestPathCollection.ContainsKey(newPath.startNode.ToString()))
+                    {
+                        _shortestPathCollection[newPath.startNode.ToString()].Add(newPath.endNode.ToString(), newPath);
+                    }
+                    else
+                    {
+                        Dictionary<string, MetroPath> tmpD = new Dictionary<string, MetroPath>();
+                        tmpD.Add(newPath.endNode.Name, newPath);
+                        _shortestPathCollection.Add(newPath.startNode.Name, tmpD);
+                    }
+                }
+                else
+                {
+                    tmpPath.changeLinks(newPath);
+                    tmpPath.totalWeight = newPath.totalWeight;
                 }
             }
         

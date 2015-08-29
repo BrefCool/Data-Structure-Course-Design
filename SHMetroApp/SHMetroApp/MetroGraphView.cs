@@ -24,8 +24,8 @@ namespace SHMetroApp
         private MetroNode _clickNode;
         private MetroNode _startNode;
         private MetroNode _endNode;
-        private List<MetroPath> _shortestPathsCollection = new List<MetroPath>();
-        //private MetroPathCollection _
+        //private List<MetroPath> _shortestPathsCollection = new List<MetroPath>();
+        private MetroPathCollection _shortestPathsCollection = new MetroPathCollection();
         private Point _mouseLastLocation = Point.Empty;
         private Point _mouseTempLocation = Point.Empty;
         private Point _mouseDownLocation = Point.Empty;
@@ -98,18 +98,26 @@ namespace SHMetroApp
         public MetroNode startNode
         {
             get { return _startNode; }
-            set { _startNode = value; }
+            set 
+            { 
+                _startNode = value;
+                Invalidate();
+            }
         }
 
         //获取或设置目的站点
         public MetroNode endNode
         {
             get { return _endNode; }
-            set { _endNode = value; }
+            set 
+            {
+                _endNode = value;
+                Invalidate();
+            }
         }
 
         //获取最短路径集合
-        public List<MetroPath> shortestPathCollection
+        public MetroPathCollection shortestPathCollection
         {
             get { return _shortestPathsCollection; }
         }
@@ -142,7 +150,6 @@ namespace SHMetroApp
 
             var collection = xmlDoc.DocumentElement;
 
-            this.shortestPathCollection.Clear();
             foreach (System.Xml.XmlNode pathNode in collection.SelectNodes("Paths/Path"))
             {
                 MetroNode start = this.Graph.Nodes.Find(delegate(MetroNode node)
@@ -177,7 +184,7 @@ namespace SHMetroApp
                     newPath.links.Add(new MetroLink(node1, node2, line, int.Parse(linkNode.Attributes["Flag"].Value)));
                 }
 
-                this.shortestPathCollection.Add(newPath);
+                this.shortestPathCollection.addShortestPathCollection(newPath);
             }
         }
 
@@ -193,20 +200,24 @@ namespace SHMetroApp
             var collection = xmlDoc.DocumentElement;
 
             var paths = addChildNode(collection, "Paths");
-            foreach (var shortestPath in shortestPathCollection)
+            foreach (MetroNode start in this.Graph.Nodes)
             {
-                var pathNode = addChildNode(paths, "Path");
-                addAtrribute(pathNode, "From", shortestPath.startNode.ToString());
-                addAtrribute(pathNode, "To", shortestPath.endNode.ToString());
-                addAtrribute(pathNode, "Weight", shortestPath.totalWeight.ToString());
-
-                foreach (var link in shortestPath.links)
+                foreach (MetroNode end in this.Graph.Nodes)
                 {
-                    var linkNode = addChildNode(pathNode, "Link");
-                    addAtrribute(linkNode, "Node1", link.Node1.ToString());
-                    addAtrribute(linkNode, "Node2", link.Node2.ToString());
-                    addAtrribute(linkNode, "Line", link.Line.ToString());
-                    addAtrribute(linkNode, "Flag", link.Flag.ToString());
+                    MetroPath shortestPath = this.shortestPathCollection.getShortestPathCollection(start.ToString(), end.ToString());
+                    var pathNode = addChildNode(paths, "Path");
+                    addAtrribute(pathNode, "From", shortestPath.startNode.ToString());
+                    addAtrribute(pathNode, "To", shortestPath.endNode.ToString());
+                    addAtrribute(pathNode, "Weight", shortestPath.totalWeight.ToString());
+
+                    foreach (var link in shortestPath.links)
+                    {
+                        var linkNode = addChildNode(pathNode, "Link");
+                        addAtrribute(linkNode, "Node1", link.Node1.ToString());
+                        addAtrribute(linkNode, "Node2", link.Node2.ToString());
+                        addAtrribute(linkNode, "Line", link.Line.ToString());
+                        addAtrribute(linkNode, "Flag", link.Flag.ToString());
+                    }
                 }
             }
 
@@ -359,27 +370,19 @@ namespace SHMetroApp
         //初始化最短路径集合
         public void initializeCollection()
         {
-            this.shortestPathCollection.Clear();
             foreach (MetroNode start in this.Graph.Nodes)
             {
                 foreach (MetroNode end in this.Graph.Nodes)
                 {
-                    MetroPath tmpPath = this.shortestPathCollection.Find(delegate(MetroPath path)
+                    if (start.Name != end.Name)
+                    {                        
+                        MetroPath newPath = new MetroPath(start, end, int.MaxValue);
+                        this.shortestPathCollection.addShortestPathCollection(newPath);
+                    }
+                    else
                     {
-                        return (path.startNode.Name == end.Name && path.endNode.Name == start.Name);
-                    });
-                    if (tmpPath == null)
-                    {
-                        if (start.Name != end.Name)
-                        {                        
-                            MetroPath newPath = new MetroPath(start, end, int.MaxValue);
-                            this.shortestPathCollection.Add(newPath);
-                        }
-                        else
-                        {
-                            MetroPath newPath = new MetroPath(start, end, 0);
-                            this.shortestPathCollection.Add(newPath);
-                        }
+                        MetroPath newPath = new MetroPath(start, end, 0);
+                        this.shortestPathCollection.addShortestPathCollection(newPath);
                     }
                 }
             }
@@ -389,16 +392,15 @@ namespace SHMetroApp
         public void getShortestPath()
         {
             int a;
-            List<MetroNode> nodeList = new List<MetroNode>();
+            HashSet<MetroNode> nodeList = new HashSet<MetroNode>();
             foreach (MetroNode node1 in this.Graph.Nodes)
             {
-                nodeList.Clear();
-                foreach (MetroNode node2 in this.Graph.Nodes)
+                foreach (MetroNode node in this.Graph.Nodes)
                 {
-                    if (node2 != node1)
-                        nodeList.Add(node2);
+                    nodeList.Add(node);
                 }
-                MetroPath minPath = findPath(node1, node1.Links[0].Node2);
+                nodeList.Remove(node1);
+                MetroPath minPath;
                 MetroNode tmpNode = node1;
                 while (nodeList.Count != 0)
                 {
@@ -407,8 +409,8 @@ namespace SHMetroApp
                         a = 7;
                     foreach (MetroLink link in tmpNode.Links)
                     {
-                        MetroPath path = findPath(node1, link.Node2);
-                        MetroPath tmpPath = findPath(node1, link.Node1);
+                        MetroPath path = this.shortestPathCollection.getShortestPathCollection(node1.ToString(),link.Node2.ToString());
+                        MetroPath tmpPath = this.shortestPathCollection.getShortestPathCollection(node1.ToString(), link.Node1.ToString());
                         Trace.WriteLine(link.Node1.ToString() + "!?");
                         if (tmpPath.totalWeight + link.Weight < path.totalWeight)
                         {
@@ -417,10 +419,10 @@ namespace SHMetroApp
                             path.totalWeight = tmpPath.totalWeight + link.Weight;
                         }
                     }
-                    minPath = findPath(node1, nodeList[0]);
+                    minPath = this.shortestPathCollection.getShortestPathCollection(node1.ToString(), nodeList.First().ToString());
                     foreach (MetroNode node in nodeList)
                     {
-                        MetroPath p = findPath(node1, node);
+                        MetroPath p = this.shortestPathCollection.getShortestPathCollection(node1.ToString(), node.ToString());
                         if(p.totalWeight < minPath.totalWeight)
                             minPath = p;
                     }
@@ -428,16 +430,6 @@ namespace SHMetroApp
                     nodeList.Remove(tmpNode);
                 }
             }
-        }
-
-        //查找具体两个站点间最短路径
-        public MetroPath findPath(MetroNode Node1,MetroNode Node2)
-        {
-            MetroPath path = this.shortestPathCollection.Find(delegate(MetroPath p)
-            {
-                return ((Node1 == p.startNode && Node2 == p.endNode) || (Node1 == p.endNode && Node2 == p.startNode));
-            });
-            return path;
         }
 
         #region 绘图区域
@@ -455,11 +447,36 @@ namespace SHMetroApp
                 //绘制线路图
                 paintGraph(e.Graphics, this.Graph);
 
+                //绘制导航起始站点标志
+                paintStartEndNodes(e.Graphics);
+
                 //绘制总线路标识
                 paintLines(e.Graphics, this.Graph);
 
                 //绘制临时线段
                 paintTempLink(e.Graphics);
+            }
+
+            private void paintStartEndNodes(Graphics graphics)
+            {
+                //绘制起点标志
+                if (this.startNode != null)
+                {
+                    var startNodeImage = Properties.Resources.start;
+                    int sx = this.startNode.X - startNodeImage.Width / 2;
+                    int sy = this.startNode.Y - startNodeImage.Height;
+                    Trace.WriteLine(startNodeImage.Height + "||" + startNodeImage.Width);
+                    graphics.DrawImage(startNodeImage, sx, sy);
+                }
+
+                //绘制终点标志
+                if (this.endNode != null)
+                {
+                    var endNodeImage = Properties.Resources.end;
+                    int sx = this.endNode.X - endNodeImage.Width / 2;
+                    int sy = this.endNode.Y - endNodeImage.Height;
+                    graphics.DrawImage(endNodeImage, sx, sy);
+                }
             }
 
             private void paintTempLink(Graphics g)
@@ -653,6 +670,14 @@ namespace SHMetroApp
                             cms.Items.Add("新建线路", null, new EventHandler(createLine));
                             cms.Show(this, e.X, e.Y);
                             _mouseLastLocation = e.Location;
+                        }
+                    }
+                    else
+                    {
+                        if (this.endNode != null && this._mouseLastLocation == this._mouseDownLocation)
+                        {
+                            this.startNode = null;
+                            this.endNode = null;
                         }
                     }
                 }

@@ -6,20 +6,59 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using System.Threading;
 
 namespace SHMetroApp
 {
     public partial class Form1 : Form
     {
+        private delegate void dataPrepareDelegate();
+        //private waitingForm wForm = new waitingForm();
+
         public Form1()
         {
             InitializeComponent();
 
-            metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
-            metroGraphView.prepareShortestPathsCollection(Application.StartupPath + "\\ShortestPathCollection.xml");
+            //dataPrepareDelegate dp = dataPrepare;
+            //IAsyncResult ar = dp.BeginInvoke(null, null);
+            //string s = "正在导入数据文件";
+            //int i = 0;
+            //while (!ar.IsCompleted)
+            //{
+            //    string tmp = "";
+            //    if (i == 4)
+            //    {
+            //        tmp = s;
+            //        i = 0;
+            //    }
+            //    else
+            //    {
+            //        tmp = wForm.message;
+            //        tmp = tmp + ".";
+            //    }
+            //    i++;
+            //    wForm.message = tmp;
+            //}
+
+            //wForm.closeOrNot = true;
+            //metroGraphView.Focus();
+            //metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
+            dataPrepare();
             metroGraphView.Focus();
             metroGraphView.clickNodeChanged += new MetroGraphView.valueChangedHandler(metroGraphView_clickNodeChanged);
         }
+
+        private void dataPrepare()
+        {
+            metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
+            metroGraphView.initializeCollection();
+            metroGraphView.prepareShortestPathsCollection(Application.StartupPath + "\\ShortestPathCollection.xml");
+        }
+
+        //private void closeWaitingForm()
+        //{
+        //    this.wForm.closeOrNot = true;
+        //}
 
         private void metroGraphView_clickNodeChanged(object sender, EventArgs e)
         {
@@ -104,6 +143,11 @@ namespace SHMetroApp
             metroGraphView.toggleEditStatus();
             metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
             metroGraphView.Focus();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            
         }
     }
 }

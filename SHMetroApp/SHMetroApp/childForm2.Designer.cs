@@ -68,6 +68,8 @@
             this.Controls.Add(this.button1);
             this.Controls.Add(this.chooseBox);
             this.Controls.Add(this.chooseLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.Name = "childForm2";
             this.Text = "选择线路";
             this.ResumeLayout(false);

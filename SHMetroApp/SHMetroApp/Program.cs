@@ -15,7 +15,19 @@ namespace SHMetroApp
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new Form1());
+            splashForm Splash = new splashForm();
+            Splash.showSplash();
+            while (Splash.hasStarted)
+            {
+                Splash.message = "正在导入数据文件...";
+            }
+            
+            Form1 mainForm = new Form1();
+
+            Splash.closeSplash();
+            Application.Run(mainForm);
+
+            
         }
     }
 }

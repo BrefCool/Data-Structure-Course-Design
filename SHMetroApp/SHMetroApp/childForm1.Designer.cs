@@ -114,6 +114,8 @@
             this.Controls.Add(this.lineColorLabel);
             this.Controls.Add(this.lineNameBox);
             this.Controls.Add(this.lineNameLabel);
+            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.MaximizeBox = false;
             this.MaximumSize = new System.Drawing.Size(529, 157);
             this.MinimumSize = new System.Drawing.Size(529, 157);
             this.Name = "childForm1";
