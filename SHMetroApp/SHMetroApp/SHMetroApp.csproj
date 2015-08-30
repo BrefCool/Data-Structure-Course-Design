@@ -84,7 +84,6 @@
     <Compile Include="MetroPathCollection.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="splashForm.cs" />
     <Compile Include="waitingForm.cs">
       <SubType>Form</SubType>
     </Compile>

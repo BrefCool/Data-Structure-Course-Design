@@ -12,37 +12,13 @@ namespace SHMetroApp
 {
     public partial class Form1 : Form
     {
-        private delegate void dataPrepareDelegate();
-        //private waitingForm wForm = new waitingForm();
+        public static BackgroundWorker bw = new BackgroundWorker();
+        public static waitingForm wForm;
 
         public Form1()
         {
             InitializeComponent();
 
-            //dataPrepareDelegate dp = dataPrepare;
-            //IAsyncResult ar = dp.BeginInvoke(null, null);
-            //string s = "正在导入数据文件";
-            //int i = 0;
-            //while (!ar.IsCompleted)
-            //{
-            //    string tmp = "";
-            //    if (i == 4)
-            //    {
-            //        tmp = s;
-            //        i = 0;
-            //    }
-            //    else
-            //    {
-            //        tmp = wForm.message;
-            //        tmp = tmp + ".";
-            //    }
-            //    i++;
-            //    wForm.message = tmp;
-            //}
-
-            //wForm.closeOrNot = true;
-            //metroGraphView.Focus();
-            //metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
             dataPrepare();
             metroGraphView.Focus();
             metroGraphView.clickNodeChanged += new MetroGraphView.valueChangedHandler(metroGraphView_clickNodeChanged);
@@ -54,11 +30,6 @@ namespace SHMetroApp
             metroGraphView.initializeCollection();
             metroGraphView.prepareShortestPathsCollection(Application.StartupPath + "\\ShortestPathCollection.xml");
         }
-
-        //private void closeWaitingForm()
-        //{
-        //    this.wForm.closeOrNot = true;
-        //}
 
         private void metroGraphView_clickNodeChanged(object sender, EventArgs e)
         {
@@ -121,12 +92,29 @@ namespace SHMetroApp
             X_textBox.Text = "";
             Y_textBox.Text = "";
 
+            bw.DoWork += bw_Dowork;
+            bw.RunWorkerAsync();
+
             metroGraphView.toggleEditStatus();
             metroGraphView.saveGraph(Application.StartupPath + "\\MetroGraph.xml");
-            metroGraphView.initializeCollection();
             metroGraphView.getShortestPath();
             metroGraphView.saveShortestPathsCollection(Application.StartupPath + "\\ShortestPathCollection.xml");
+
+            if (wForm.InvokeRequired)
+            {
+                wForm.Invoke(new MethodInvoker(wForm.Close));
+            }
+            else
+            {
+                wForm.Close();
+            }
             metroGraphView.Focus();
+        }
+
+        public static void bw_Dowork(object sender, DoWorkEventArgs e)
+        {
+            wForm = new waitingForm("正在重算两两站点间的最短路径(时间较久= =)");
+            Application.Run(wForm);
         }
 
         private void cancelBtn_Click(object sender, EventArgs e)
@@ -143,11 +131,6 @@ namespace SHMetroApp
             metroGraphView.toggleEditStatus();
             metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
             metroGraphView.Focus();
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-            
         }
     }
 }

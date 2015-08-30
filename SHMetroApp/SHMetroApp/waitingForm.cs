@@ -12,19 +12,7 @@ namespace SHMetroApp
 {
     public partial class waitingForm : Form
     {
-        //private bool _closeOrNot = false;
         private string _message = string.Empty;
-
-        //public bool closeOrNot
-        //{
-        //    get { return _closeOrNot; }
-        //    set
-        //    {
-        //        _closeOrNot = value;
-        //        if (_closeOrNot)
-        //            this.Close();
-        //    }
-        //}
 
         public string message
         {
@@ -55,9 +43,11 @@ namespace SHMetroApp
             }
         }
 
-        public waitingForm()
+        public waitingForm(string msg)
         {
             InitializeComponent();
+
+            message = msg;
         }
 
     }

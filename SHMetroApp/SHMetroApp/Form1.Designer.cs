@@ -194,7 +194,6 @@
             this.Name = "Form1";
             this.Text = "上海市地铁线路图";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.editGroup.ResumeLayout(false);

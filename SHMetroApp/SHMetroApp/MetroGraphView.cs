@@ -24,7 +24,6 @@ namespace SHMetroApp
         private MetroNode _clickNode;
         private MetroNode _startNode;
         private MetroNode _endNode;
-        //private List<MetroPath> _shortestPathsCollection = new List<MetroPath>();
         private MetroPathCollection _shortestPathsCollection = new MetroPathCollection();
         private Point _mouseLastLocation = Point.Empty;
         private Point _mouseTempLocation = Point.Empty;
@@ -447,6 +446,9 @@ namespace SHMetroApp
                 //绘制线路图
                 paintGraph(e.Graphics, this.Graph);
 
+                //绘制最短路径
+                paintShortestPath(e.Graphics);
+
                 //绘制导航起始站点标志
                 paintStartEndNodes(e.Graphics);
 
@@ -455,6 +457,42 @@ namespace SHMetroApp
 
                 //绘制临时线段
                 paintTempLink(e.Graphics);
+            }
+
+            private void paintShortestPath(Graphics graphics)
+            {
+                if (this.startNode == null || this.endNode == null)
+                    return;
+
+                MetroPath shortestPath = shortestPathCollection.getShortestPathCollection(this.startNode.ToString(),
+                    this.endNode.ToString());
+
+                float X = (this.ClientRectangle.Location.X - this.scrollX) / this.zoomScale;
+                float Y = (this.ClientRectangle.Location.Y - this.scrollY) / this.zoomScale;
+                RectangleF whiteMask = new RectangleF(X, Y, this.ClientRectangle.Width / this.zoomScale,
+                    this.ClientRectangle.Height / this.zoomScale);
+                using (Brush brush = new SolidBrush(Color.FromArgb(200, Color.White)))
+                {
+                    graphics.FillRectangle(brush, whiteMask);
+                }
+
+                foreach (MetroLink link in shortestPath.links)
+                {
+                    if (link.Flag >= 0)
+                    {
+                        paintLink(graphics, link);
+                    }
+                    else
+                    {
+                        int temp = link.Flag;
+                        link.Flag = 0;
+                        paintLink(graphics, link);
+                        link.Flag = temp;
+                    }
+
+                    paintNode(graphics, link.Node1);
+                    paintNode(graphics, link.Node2);
+                }
             }
 
             private void paintStartEndNodes(Graphics graphics)
