@@ -121,6 +121,13 @@ namespace SHMetroApp
             get { return _shortestPathsCollection; }
         }
 
+        //获取按键码
+        public string keyCode
+        {
+            get { return _keyCode; }
+            set { _keyCode = value; }
+        }
+
     #endregion
 
     #region 方法
@@ -834,7 +841,8 @@ namespace SHMetroApp
 
             protected override void OnKeyDown(KeyEventArgs e)
             {
-                this._keyCode = e.KeyCode.ToString();
+                if(e.KeyCode.ToString() == "ControlKey")
+                    this._keyCode = e.KeyCode.ToString();
             }
 
             protected override void OnKeyUp(KeyEventArgs e)

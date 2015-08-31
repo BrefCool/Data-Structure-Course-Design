@@ -132,5 +132,23 @@ namespace SHMetroApp
             metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
             metroGraphView.Focus();
         }
+
+        private void ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Help.ShowHelp(this, Application.StartupPath + "\\help.chm");
+        }
+
+        private void Form1_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode.ToString() == "ControlKey")
+                metroGraphView.keyCode = "ControlKey";
+        }
+
+        private void Form1_KeyUp(object sender, KeyEventArgs e)
+        {
+            metroGraphView.keyCode = "";
+        }
+
+
     }
 }

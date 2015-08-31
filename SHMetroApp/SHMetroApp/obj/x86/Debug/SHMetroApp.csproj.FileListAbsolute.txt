@@ -9,3 +9,4 @@ E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.MetroGraphView.re
 E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.childForm1.resources
 E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.childForm2.resources
 E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.waitingForm.resources
+E:\CODE\SHMetro\SHMetroApp\SHMetroApp\obj\x86\Debug\SHMetroApp.csprojResolveAssemblyReference.cache
