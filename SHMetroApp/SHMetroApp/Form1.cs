@@ -83,6 +83,15 @@ namespace SHMetroApp
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
+            if (metroGraphView.nodeHasSameName())
+            {
+                MessageBox.Show("图中存在具有相同名称的多个站点！");
+                return;
+            }
+
+            bw.DoWork += bw_Dowork;
+            bw.RunWorkerAsync();
+
             Size tmpSize = metroGraphView.Size;
             tmpSize.Height += 50;
             metroGraphView.Size = tmpSize;
@@ -92,14 +101,12 @@ namespace SHMetroApp
             X_textBox.Text = "";
             Y_textBox.Text = "";
 
-            bw.DoWork += bw_Dowork;
-            bw.RunWorkerAsync();
-
             metroGraphView.toggleEditStatus();
             metroGraphView.saveGraph(Application.StartupPath + "\\MetroGraph.xml");
+            metroGraphView.initializeCollection();
             metroGraphView.getShortestPath();
             metroGraphView.saveShortestPathsCollection(Application.StartupPath + "\\ShortestPathCollection.xml");
-
+            
             if (wForm.InvokeRequired)
             {
                 wForm.Invoke(new MethodInvoker(wForm.Close));
@@ -108,6 +115,7 @@ namespace SHMetroApp
             {
                 wForm.Close();
             }
+
             metroGraphView.Focus();
         }
 

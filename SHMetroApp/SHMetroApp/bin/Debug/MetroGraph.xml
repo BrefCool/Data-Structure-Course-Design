@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="gb2312"?>
-<MetroGraph ScrollX="-409" ScrollY="20" ZoomScale="0.9999998">
+<MetroGraph ScrollX="90" ScrollY="-188" ZoomScale="0.9999998">
   <Lines>
     <Line Name="1号线" Color="-1570792" />
     <Line Name="2号线" Color="-7751651" />
@@ -280,6 +280,8 @@
     <Node Name="大连路" X="1042" Y="605">
       <Link To="临平路" Line="4号线" Weight="1" Flag="0" />
       <Link To="杨树浦路" Line="4号线" Weight="1" Flag="-1" />
+      <Link To="提篮桥" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="江浦公园" Line="12号线" Weight="1" Flag="0" />
     </Node>
     <Node Name="杨树浦路" X="1042" Y="655">
       <Link To="大连路" Line="4号线" Weight="1" Flag="0" />
@@ -708,6 +710,7 @@
     <Node Name="曲阜路" X="851" Y="659">
       <Link To="中兴路" Line="8号线" Weight="1" Flag="0" />
       <Link To="人民广场" Line="8号线" Weight="1" Flag="-1" />
+      <Link To="天潼路" Line="12号线" Weight="1" Flag="0" />
     </Node>
     <Node Name="虹口足球场" X="947" Y="486">
       <Link To="曲阳路" Line="8号线" Weight="1" Flag="0" />
@@ -833,17 +836,19 @@
     <Node Name="新江湾城" X="1098" Y="66">
       <Link To="殷高东路" Line="10号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="邮电新村" X="1037" Y="535">
+    <Node Name="邮电新村" X="1042" Y="535">
       <Link To="四平路" Line="10号线" Weight="1" Flag="0" />
       <Link To="海伦路" Line="10号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="四川北路" X="963" Y="695">
+    <Node Name="四川北路" X="926" Y="648">
       <Link To="海伦路" Line="10号线" Weight="1" Flag="0" />
       <Link To="天潼路" Line="10号线" Weight="1" Flag="-1" />
     </Node>
     <Node Name="天潼路" X="885" Y="695">
       <Link To="四川北路" Line="10号线" Weight="1" Flag="0" />
       <Link To="南京东路" Line="10号线" Weight="1" Flag="-1" />
+      <Link To="曲阜路" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="国际客运中心" Line="12号线" Weight="1" Flag="0" />
     </Node>
     <Node Name="豫园" X="886" Y="833">
       <Link To="南京东路" Line="10号线" Weight="1" Flag="0" />
@@ -897,38 +902,40 @@
     <Node Name="航中路" X="227" Y="823">
       <Link To="紫藤路" Line="10号线" Weight="1" Flag="0" />
     </Node>
-    <Node Name="东靖路" X="1437" Y="574">
+    <Node Name="东靖路" X="1437" Y="535">
       <Link To="五洲大道" Line="6号线" Weight="1" Flag="0" />
       <Link To="巨峰路" Line="6号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="五洲大道" X="1437" Y="520">
+    <Node Name="五洲大道" X="1437" Y="465">
       <Link To="洲海路" Line="6号线" Weight="1" Flag="0" />
       <Link To="东靖路" Line="6号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="洲海路" X="1437" Y="466">
+    <Node Name="洲海路" X="1437" Y="395">
       <Link To="外高桥保税区南站" Line="6号线" Weight="1" Flag="0" />
       <Link To="五洲大道" Line="6号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="外高桥保税区南站" X="1437" Y="412">
+    <Node Name="外高桥保税区南站" X="1437" Y="325">
       <Link To="航津路" Line="6号线" Weight="1" Flag="0" />
       <Link To="洲海路" Line="6号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="航津路" X="1437" Y="358">
+    <Node Name="航津路" X="1437" Y="255">
       <Link To="外高桥保税区南站" Line="6号线" Weight="1" Flag="-1" />
       <Link To="外高桥保税区北站" Line="6号线" Weight="1" Flag="0" />
     </Node>
-    <Node Name="外高桥保税区北站" X="1437" Y="304">
+    <Node Name="外高桥保税区北站" X="1437" Y="185">
       <Link To="港城路" Line="6号线" Weight="1" Flag="0" />
       <Link To="航津路" Line="6号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="港城路" X="1436" Y="250">
+    <Node Name="港城路" X="1437" Y="115">
       <Link To="外高桥保税区北站" Line="6号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="巨峰路" X="1437" Y="628">
+    <Node Name="巨峰路" X="1437" Y="605">
       <Link To="东靖路" Line="6号线" Weight="1" Flag="0" />
       <Link To="五莲路" Line="6号线" Weight="1" Flag="-1" />
+      <Link To="杨高北路" Line="12号线" Weight="1" Flag="0" />
+      <Link To="东陆路" Line="12号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="五莲路" X="1437" Y="690">
+    <Node Name="五莲路" X="1437" Y="675">
       <Link To="巨峰路" Line="6号线" Weight="1" Flag="0" />
       <Link To="博兴路" Line="6号线" Weight="1" Flag="-1" />
     </Node>
@@ -1058,6 +1065,53 @@
     <Node Name="石龙路" X="521" Y="1013">
       <Link To="龙漕路" Line="3号线" Weight="1" Flag="0" />
       <Link To="上海南站" Line="3号线" Weight="1" Flag="-1" />
+    </Node>
+    <Node Name="金海路" X="1660" Y="665">
+      <Link To="申江路" Line="12号线" Weight="1" Flag="0" />
+    </Node>
+    <Node Name="申江路" X="1660" Y="605">
+      <Link To="金海路" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="金京路" Line="12号线" Weight="1" Flag="0" />
+    </Node>
+    <Node Name="金京路" X="1600" Y="605">
+      <Link To="申江路" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="杨高北路" Line="12号线" Weight="1" Flag="-1" />
+    </Node>
+    <Node Name="国际客运中心" X="959" Y="695">
+      <Link To="天潼路" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="提篮桥" Line="12号线" Weight="1" Flag="0" />
+    </Node>
+    <Node Name="提篮桥" X="992" Y="646">
+      <Link To="国际客运中心" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="大连路" Line="12号线" Weight="1" Flag="0" />
+    </Node>
+    <Node Name="杨高北路" X="1519" Y="605">
+      <Link To="巨峰路" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="金京路" Line="12号线" Weight="1" Flag="0" />
+    </Node>
+    <Node Name="江浦公园" X="1102" Y="605">
+      <Link To="大连路" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="宁国路" Line="12号线" Weight="1" Flag="0" />
+    </Node>
+    <Node Name="宁国路" X="1162" Y="605">
+      <Link To="江浦公园" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="隆昌路" Line="12号线" Weight="1" Flag="0" />
+    </Node>
+    <Node Name="隆昌路" X="1222" Y="605">
+      <Link To="宁国路" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="爱国路" Line="12号线" Weight="1" Flag="0" />
+    </Node>
+    <Node Name="爱国路" X="1282" Y="605">
+      <Link To="隆昌路" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="复兴岛" Line="12号线" Weight="1" Flag="0" />
+    </Node>
+    <Node Name="复兴岛" X="1342" Y="605">
+      <Link To="爱国路" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="东陆路" Line="12号线" Weight="1" Flag="0" />
+    </Node>
+    <Node Name="东陆路" X="1389" Y="605">
+      <Link To="复兴岛" Line="12号线" Weight="1" Flag="-1" />
+      <Link To="巨峰路" Line="12号线" Weight="1" Flag="0" />
     </Node>
   </Nodes>
 </MetroGraph>

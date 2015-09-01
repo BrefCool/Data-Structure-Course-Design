@@ -438,6 +438,19 @@ namespace SHMetroApp
             }
         }
 
+        //检查图中是否有相同名字的站点
+        public bool nodeHasSameName()
+        {
+            Dictionary<string, int> d = new Dictionary<string, int>(this.Graph.Nodes.Count);
+            foreach (MetroNode node in this.Graph.Nodes)
+            {
+                if (d.ContainsKey(node.ToString()))
+                    return true;
+                d.Add(node.ToString(), 1);
+            }
+            return false;
+        }
+
         #region 绘图区域
 
             protected override void OnPaint(PaintEventArgs e)
