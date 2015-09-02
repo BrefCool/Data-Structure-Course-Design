@@ -49,13 +49,15 @@ namespace SHMetroApp
 
         #region 方法
 
+            //构造函数
             public MetroPath(MetroNode start, MetroNode end,int total)
             {
                 startNode = start;
                 endNode = end;
                 totalWeight = total;
             }
-
+            
+            //用于计算最短路径时更改最短路径的links
             public void changeLinks(MetroPath path)
             {
                 this.links.Clear();

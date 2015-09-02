@@ -24,14 +24,13 @@ namespace SHMetroApp
 
             bw.DoWork += bw_Dowork;
             bw.RunWorkerCompleted += bw_RunWorkerCompleted;
+            //在后台执行Form1的初始化
             bw.RunWorkerAsync();
 
             wForm = new waitingForm("正在导入数据文件...");
             Application.Run(wForm);
 
             Application.Run(mainForm);
-
-            
         }
 
         static void bw_Dowork(object sender, DoWorkEventArgs e)

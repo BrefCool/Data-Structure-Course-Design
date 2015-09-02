@@ -121,7 +121,7 @@ namespace SHMetroApp
             get { return _shortestPathsCollection; }
         }
 
-        //获取按键码
+        //获取与设置按键码
         public string keyCode
         {
             get { return _keyCode; }
@@ -397,7 +397,7 @@ namespace SHMetroApp
         //计算最短路径
         public void getShortestPath()
         {
-            int a;
+            Trace.WriteLine("重算开始");
             HashSet<MetroNode> nodeList = new HashSet<MetroNode>();
             foreach (MetroNode node1 in this.Graph.Nodes)
             {
@@ -410,14 +410,12 @@ namespace SHMetroApp
                 MetroNode tmpNode = node1;
                 while (nodeList.Count != 0)
                 {
-                    Trace.WriteLine(nodeList.Count);
-                    if (nodeList.Count == 230)
-                        a = 7;
+                    if(tmpNode.Links.Count == 0)
+                        break;
                     foreach (MetroLink link in tmpNode.Links)
                     {
                         MetroPath path = this.shortestPathCollection.getShortestPathCollection(node1.ToString(),link.Node2.ToString());
                         MetroPath tmpPath = this.shortestPathCollection.getShortestPathCollection(node1.ToString(), link.Node1.ToString());
-                        Trace.WriteLine(link.Node1.ToString() + "!?");
                         if (tmpPath.totalWeight + link.Weight < path.totalWeight)
                         {
                             path.changeLinks(tmpPath);
@@ -436,6 +434,7 @@ namespace SHMetroApp
                     nodeList.Remove(tmpNode);
                 }
             }
+            Trace.WriteLine("重算完成");
         }
 
         //检查图中是否有相同名字的站点
@@ -466,11 +465,11 @@ namespace SHMetroApp
                 //绘制线路图
                 paintGraph(e.Graphics, this.Graph);
 
-                //绘制最短路径
-                paintShortestPath(e.Graphics);
-
                 //绘制导航起始站点标志
                 paintStartEndNodes(e.Graphics);
+
+                //绘制最短路径
+                paintShortestPath(e.Graphics);
 
                 //绘制总线路标识
                 paintLines(e.Graphics, this.Graph);
@@ -484,6 +483,8 @@ namespace SHMetroApp
                 if (this.startNode == null || this.endNode == null)
                     return;
 
+                List<string> transNodeNameList = new List<string>();
+                string tmpLineName = string.Empty;
                 MetroPath shortestPath = shortestPathCollection.getShortestPathCollection(this.startNode.ToString(),
                     this.endNode.ToString());
 
@@ -496,22 +497,68 @@ namespace SHMetroApp
                     graphics.FillRectangle(brush, whiteMask);
                 }
 
-                foreach (MetroLink link in shortestPath.links)
+                if (shortestPath.links.Count != 0)
                 {
-                    if (link.Flag >= 0)
+                    tmpLineName = shortestPath.links[0].Line.ToString();
+                    foreach (MetroLink link in shortestPath.links)
                     {
-                        paintLink(graphics, link);
-                    }
-                    else
-                    {
-                        int temp = link.Flag;
-                        link.Flag = 0;
-                        paintLink(graphics, link);
-                        link.Flag = temp;
-                    }
+                        if (link.Flag >= 0)
+                        {
+                            paintLink(graphics, link);
+                        }
+                        else
+                        {
+                            int temp = link.Flag;
+                            link.Flag = 0;
+                            paintLink(graphics, link);
+                            link.Flag = temp;
+                        }
 
-                    paintNode(graphics, link.Node1);
-                    paintNode(graphics, link.Node2);
+                        paintNode(graphics, link.Node1);
+                        paintNode(graphics, link.Node2);
+
+                        if (link.Line.ToString() != tmpLineName)
+                        {
+                            transNodeNameList.Add(link.Node1.ToString());
+                            tmpLineName = link.Line.ToString();
+                        }
+                    }
+                }
+
+                int count = transNodeNameList.Count;
+                if (count != 0)
+                {
+                    graphics.ResetTransform();
+                    Rectangle rc = new Rectangle(220, 20, 220, 80 + (count + 1) * 20);
+                    using (Brush brush = new SolidBrush(Color.White))
+                    {
+                        graphics.FillRectangle(brush, rc);
+                    }
+                    graphics.DrawRectangle(Pens.Black, rc);
+
+                    int y = rc.Y + 20;
+                    string text = "换乘指南";
+                    SizeF sf = graphics.MeasureString( text, this.Font);
+                    graphics.DrawString(text, this.Font, Brushes.Black, rc.X + 20, y - sf.Height / 2);
+
+                    y += 20;
+                    text = "出发站：" + this.startNode.ToString();
+                    graphics.DrawString(text, this.Font, Brushes.Black, rc.X + 20, y - sf.Height / 2);
+
+                    y += 20;
+                    text = "目的站：" + this.endNode.ToString();
+                    graphics.DrawString(text, this.Font, Brushes.Black, rc.X + 20, y - sf.Height / 2);
+
+                    y += 20;
+                    text = "换乘站：";
+                    graphics.DrawString(text, this.Font, Brushes.Black, rc.X + 20, y - sf.Height / 2);
+                    y += 20;
+                    foreach (string s in transNodeNameList)
+                    {
+                        text = s;
+                        graphics.DrawString(text, this.Font, Brushes.Black, rc.X + 20, y - sf.Height / 2);
+                        y += 20;
+                    }
                 }
             }
 
@@ -523,7 +570,6 @@ namespace SHMetroApp
                     var startNodeImage = Properties.Resources.start;
                     int sx = this.startNode.X - startNodeImage.Width / 2;
                     int sy = this.startNode.Y - startNodeImage.Height;
-                    Trace.WriteLine(startNodeImage.Height + "||" + startNodeImage.Width);
                     graphics.DrawImage(startNodeImage, sx, sy);
                 }
 

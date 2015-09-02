@@ -24,6 +24,7 @@ namespace SHMetroApp
             metroGraphView.clickNodeChanged += new MetroGraphView.valueChangedHandler(metroGraphView_clickNodeChanged);
         }
 
+        //数据准备
         private void dataPrepare()
         {
             metroGraphView.openGraph(Application.StartupPath + "\\MetroGraph.xml");
@@ -31,6 +32,7 @@ namespace SHMetroApp
             metroGraphView.prepareShortestPathsCollection(Application.StartupPath + "\\ShortestPathCollection.xml");
         }
 
+        //metroGraphView中的clickNode发生改变时的事件处理函数
         private void metroGraphView_clickNodeChanged(object sender, EventArgs e)
         {
             if (metroGraphView.clickNode != null)
@@ -90,6 +92,7 @@ namespace SHMetroApp
             }
 
             bw.DoWork += bw_Dowork;
+            //在后台执行等待窗口的运行
             bw.RunWorkerAsync();
 
             Size tmpSize = metroGraphView.Size;

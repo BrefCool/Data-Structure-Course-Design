@@ -20,28 +20,29 @@ namespace SHMetroApp
             set
             {
                 _message = value;
-                changeText();
+                //changeText();
+                processDescribeLabel.Text = _message;
             }
         }
 
-        public void changeText()
-        {
-            try
-            {
-                if (this.InvokeRequired)
-                {
-                    this.Invoke(new MethodInvoker(this.changeText));
-                    Trace.WriteLine(_message + "?");
-                    return;
-                }
-                Trace.WriteLine(_message + "!");
-                processDescribeLabel.Text = _message;
-            }
-            catch (System.Exception ex)
-            {
+        //public void changeText()
+        //{
+        //    try
+        //    {
+        //        if (this.InvokeRequired)
+        //        {
+        //            this.Invoke(new MethodInvoker(this.changeText));
+        //            Trace.WriteLine(_message + "?");
+        //            return;
+        //        }
+        //        Trace.WriteLine(_message + "!");
+        //        processDescribeLabel.Text = _message;
+        //    }
+        //    catch (System.Exception ex)
+        //    {
             	
-            }
-        }
+        //    }
+        //}
 
         public waitingForm(string msg)
         {
