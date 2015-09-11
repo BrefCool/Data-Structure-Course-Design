@@ -1,0 +1,31 @@
+﻿生成启动时间为 2015/9/11 14:31:51。
+     1>项目“E:\计算机\一些尝试\数据结构\课程设计\算法实现题08\算法实现题08\算法实现题08.vcxproj”在节点 2 上(build 个目标)。
+     1>InitializeBuildStatus:
+         正在创建“Debug\算法实现题08.unsuccessfulbuild”，因为已指定“AlwaysCreate”。
+       ClCompile:
+         所有输出均为最新。
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /AI"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0" /Zi /clr:pure /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Yu"StdAfx.h" /Fp"Debug\算法实现题08.pch" /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Core.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Data.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Drawing.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Windows.Forms.dll" /FU"C:\Program Files (x86)\Reference Assemblies\Microsoft\Framework\.NETFramework\v4.0\System.Xml.dll" /analyze- /errorReport:prompt "算法实现题08.cpp" /clr:nostdlib 
+         算法实现题08.cpp
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\CL.exe /c /Zi /clr:pure /nologo /W3 /WX- /Od /Oy- /D WIN32 /D _DEBUG /D _UNICODE /D UNICODE /EHa /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Fo"Debug\\" /Fd"Debug\vc100.pdb" /TP /analyze- /errorReport:prompt "C:\Users\tf\AppData\Local\Temp\.NETFramework,Version=v4.0.AssemblyAttributes.cpp"
+         .NETFramework,Version=v4.0.AssemblyAttributes.cpp
+       CoreResGen:
+         没有相对于源文件而言已过期的资源。正在跳过资源生成操作。
+       ResourceCompile:
+         所有输出均为最新。
+       Link:
+         C:\Program Files (x86)\Microsoft Visual Studio 10.0\VC\bin\link.exe /ERRORREPORT:PROMPT /OUT:"E:\计算机\一些尝试\数据结构\课程设计\算法实现题08\Debug\算法实现题08.exe" /INCREMENTAL /NOLOGO /ASSEMBLYRESOURCE:"Debug\算法实现题08.Form1.resources" /MANIFEST /ManifestFile:"Debug\算法实现题08.exe.intermediate.manifest" /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /DEBUG /PDB:"E:\计算机\一些尝试\数据结构\课程设计\算法实现题08\Debug\算法实现题08.pdb" /ASSEMBLYDEBUG /SUBSYSTEM:WINDOWS /TLBID:1 /ENTRY:"main" /DYNAMICBASE /FIXED:NO /NXCOMPAT /MACHINE:X86 Debug\app.res
+         Debug\AssemblyInfo.obj
+         Debug\stdafx.obj
+         "Debug\算法实现题08.obj"
+         "Debug\.NETFramework,Version=v4.0.AssemblyAttributes.obj"
+         算法实现题08.vcxproj -> E:\计算机\一些尝试\数据结构\课程设计\算法实现题08\Debug\算法实现题08.exe
+       Manifest:
+         C:\Program Files (x86)\Microsoft SDKs\Windows\v7.0A\bin\mt.exe /nologo /verbose /outputresource:"E:\计算机\一些尝试\数据结构\课程设计\算法实现题08\Debug\算法实现题08.exe;#1" /manifest "Debug\算法实现题08.exe.intermediate.manifest"
+       FinalizeBuildStatus:
+         正在删除文件“Debug\算法实现题08.unsuccessfulbuild”。
+         正在对“Debug\算法实现题08.lastbuildstate”执行 Touch 任务。
+     1>已完成生成项目“E:\计算机\一些尝试\数据结构\课程设计\算法实现题08\算法实现题08\算法实现题08.vcxproj”(build 个目标)的操作。
+
+生成成功。
+
+已用时间 00:00:05.11

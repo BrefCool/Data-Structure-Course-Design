@@ -15,7 +15,7 @@ namespace SHMetroApp
 
         #region 方法
 
-            public MetroPath getShortestPathCollection(string nodeName1, string nodeName2)
+            public MetroPath getShortestPath(string nodeName1, string nodeName2)
             {
                 if (_shortestPathCollection.ContainsKey(nodeName1))
                 {
@@ -36,9 +36,9 @@ namespace SHMetroApp
                 return null;
             }
 
-            public void addShortestPathCollection(MetroPath newPath)
+            public void addShortestPath(MetroPath newPath)
             {
-                MetroPath tmpPath = getShortestPathCollection(newPath.startNode.ToString(),newPath.endNode.ToString());
+                MetroPath tmpPath = getShortestPath(newPath.startNode.ToString(),newPath.endNode.ToString());
                 if (tmpPath == null)
                 {
                     if (_shortestPathCollection.ContainsKey(newPath.startNode.ToString()))

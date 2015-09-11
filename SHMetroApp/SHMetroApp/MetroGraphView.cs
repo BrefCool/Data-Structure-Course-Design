@@ -190,7 +190,7 @@ namespace SHMetroApp
                     newPath.links.Add(new MetroLink(node1, node2, line, int.Parse(linkNode.Attributes["Flag"].Value)));
                 }
 
-                this.shortestPathCollection.addShortestPathCollection(newPath);
+                this.shortestPathCollection.addShortestPath(newPath);
             }
         }
 
@@ -210,7 +210,7 @@ namespace SHMetroApp
             {
                 foreach (MetroNode end in this.Graph.Nodes)
                 {
-                    MetroPath shortestPath = this.shortestPathCollection.getShortestPathCollection(start.ToString(), end.ToString());
+                    MetroPath shortestPath = this.shortestPathCollection.getShortestPath(start.ToString(), end.ToString());
                     var pathNode = addChildNode(paths, "Path");
                     addAtrribute(pathNode, "From", shortestPath.startNode.ToString());
                     addAtrribute(pathNode, "To", shortestPath.endNode.ToString());
@@ -383,12 +383,12 @@ namespace SHMetroApp
                     if (start.Name != end.Name)
                     {                        
                         MetroPath newPath = new MetroPath(start, end, int.MaxValue);
-                        this.shortestPathCollection.addShortestPathCollection(newPath);
+                        this.shortestPathCollection.addShortestPath(newPath);
                     }
                     else
                     {
                         MetroPath newPath = new MetroPath(start, end, 0);
-                        this.shortestPathCollection.addShortestPathCollection(newPath);
+                        this.shortestPathCollection.addShortestPath(newPath);
                     }
                 }
             }
@@ -410,12 +410,10 @@ namespace SHMetroApp
                 MetroNode tmpNode = node1;
                 while (nodeList.Count != 0)
                 {
-                    if(tmpNode.Links.Count == 0)
-                        break;
                     foreach (MetroLink link in tmpNode.Links)
                     {
-                        MetroPath path = this.shortestPathCollection.getShortestPathCollection(node1.ToString(),link.Node2.ToString());
-                        MetroPath tmpPath = this.shortestPathCollection.getShortestPathCollection(node1.ToString(), link.Node1.ToString());
+                        MetroPath path = this.shortestPathCollection.getShortestPath(node1.ToString(),link.Node2.ToString());
+                        MetroPath tmpPath = this.shortestPathCollection.getShortestPath(node1.ToString(), link.Node1.ToString());
                         if (tmpPath.totalWeight + link.Weight < path.totalWeight)
                         {
                             path.changeLinks(tmpPath);
@@ -423,26 +421,30 @@ namespace SHMetroApp
                             path.totalWeight = tmpPath.totalWeight + link.Weight;
                         }
                     }
-                    minPath = this.shortestPathCollection.getShortestPathCollection(node1.ToString(), nodeList.First().ToString());
+                    minPath = this.shortestPathCollection.getShortestPath(node1.ToString(), nodeList.First().ToString());
                     foreach (MetroNode node in nodeList)
                     {
-                        MetroPath p = this.shortestPathCollection.getShortestPathCollection(node1.ToString(), node.ToString());
+                        MetroPath p = this.shortestPathCollection.getShortestPath(node1.ToString(), node.ToString());
                         if(p.totalWeight < minPath.totalWeight)
                             minPath = p;
                     }
-                    tmpNode = (minPath.startNode == node1) ? minPath.endNode : minPath.startNode;
+                    if(minPath.totalWeight == int.MaxValue)
+                        break;
+                    tmpNode = (minPath.startNode.ToString() == node1.ToString()) ? minPath.endNode : minPath.startNode;
                     nodeList.Remove(tmpNode);
                 }
             }
             Trace.WriteLine("重算完成");
         }
 
-        //检查图中是否有相同名字的站点
-        public bool nodeHasSameName()
+        //检查图中是否有相同名字的站点以及是否有与其他站点没有连接的站点
+        public bool nodeCheck()
         {
             Dictionary<string, int> d = new Dictionary<string, int>(this.Graph.Nodes.Count);
             foreach (MetroNode node in this.Graph.Nodes)
             {
+                if (node.Links.Count == 0)
+                    return true;
                 if (d.ContainsKey(node.ToString()))
                     return true;
                 d.Add(node.ToString(), 1);
@@ -468,7 +470,7 @@ namespace SHMetroApp
                 //绘制导航起始站点标志
                 paintStartEndNodes(e.Graphics);
 
-                //绘制最短路径
+                //绘制最短路径及换乘指南
                 paintShortestPath(e.Graphics);
 
                 //绘制总线路标识
@@ -485,9 +487,13 @@ namespace SHMetroApp
 
                 List<string> transNodeNameList = new List<string>();
                 string tmpLineName = string.Empty;
-                MetroPath shortestPath = shortestPathCollection.getShortestPathCollection(this.startNode.ToString(),
+                MetroPath shortestPath = shortestPathCollection.getShortestPath(this.startNode.ToString(),
                     this.endNode.ToString());
-
+                if (shortestPath.totalWeight == int.MaxValue)
+                {
+                    MessageBox.Show("两站点间没有合适的路径！");
+                    return;
+                }
                 float X = (this.ClientRectangle.Location.X - this.scrollX) / this.zoomScale;
                 float Y = (this.ClientRectangle.Location.Y - this.scrollY) / this.zoomScale;
                 RectangleF whiteMask = new RectangleF(X, Y, this.ClientRectangle.Width / this.zoomScale,
@@ -524,6 +530,9 @@ namespace SHMetroApp
                         }
                     }
                 }
+
+                //重绘一下出发与目的站点的标志
+                paintStartEndNodes(graphics);
 
                 int count = transNodeNameList.Count;
                 if (count != 0)
@@ -747,7 +756,7 @@ namespace SHMetroApp
                                     MetroLink newLink2 = new MetroLink(this.clickNode, tmpNode, chosenLine, -1);
                                     tmpNode.addLink(newLink1);
                                     this.clickNode.addLink(newLink2);
-                                    
+                                    this.keyCode = "";
                                 }
                                 
                             }

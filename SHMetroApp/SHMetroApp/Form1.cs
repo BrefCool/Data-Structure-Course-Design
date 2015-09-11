@@ -85,9 +85,9 @@ namespace SHMetroApp
 
         private void saveBtn_Click(object sender, EventArgs e)
         {
-            if (metroGraphView.nodeHasSameName())
+            if (metroGraphView.nodeCheck())
             {
-                MessageBox.Show("图中存在具有相同名称的多个站点！");
+                MessageBox.Show("图中存在具有相同名称的多个站点或无法达到的站点！");
                 return;
             }
 
@@ -100,9 +100,6 @@ namespace SHMetroApp
             metroGraphView.Size = tmpSize;
             editGroup.Visible = false;
             editMenuItem.Enabled = true;
-            nodeNameBox.Text = "";
-            X_textBox.Text = "";
-            Y_textBox.Text = "";
 
             metroGraphView.toggleEditStatus();
             metroGraphView.saveGraph(Application.StartupPath + "\\MetroGraph.xml");
@@ -124,7 +121,7 @@ namespace SHMetroApp
 
         public static void bw_Dowork(object sender, DoWorkEventArgs e)
         {
-            wForm = new waitingForm("正在重算两两站点间的最短路径(时间较久= =)");
+            wForm = new waitingForm("正在重算两两站点间的最短路径...");
             Application.Run(wForm);
         }
 
