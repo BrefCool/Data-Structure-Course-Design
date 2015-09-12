@@ -431,7 +431,7 @@ namespace SHMetroApp
                     if(minPath.totalWeight == int.MaxValue)
                         break;
                     tmpNode = (minPath.startNode.ToString() == node1.ToString()) ? minPath.endNode : minPath.startNode;
-                    nodeList.Remove(tmpNode);
+                    nodeList.RemoveWhere(n => n.ToString() == tmpNode.ToString());
                 }
             }
             Trace.WriteLine("重算完成");
@@ -815,6 +815,7 @@ namespace SHMetroApp
                 }
 
                 Graph.deleteNode(this.clickNode);
+                this.clickNode = null;
                 Invalidate();
             }
 

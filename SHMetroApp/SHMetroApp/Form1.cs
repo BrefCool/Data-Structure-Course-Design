@@ -91,6 +91,7 @@ namespace SHMetroApp
                 return;
             }
 
+            bw.WorkerSupportsCancellation = true;
             bw.DoWork += bw_Dowork;
             //在后台执行等待窗口的运行
             bw.RunWorkerAsync();
@@ -116,6 +117,7 @@ namespace SHMetroApp
                 wForm.Close();
             }
 
+            bw.CancelAsync();
             metroGraphView.Focus();
         }
 

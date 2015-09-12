@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="gb2312"?>
-<MetroGraph ScrollX="108" ScrollY="-331" ZoomScale="1.1">
+<MetroGraph ScrollX="20" ScrollY="-342" ZoomScale="1.1">
   <Lines>
     <Line Name="1号线" Color="-1570792" />
     <Line Name="2号线" Color="-7751651" />
@@ -440,7 +440,7 @@
     <Node Name="徐泾东" X="60" Y="670">
       <Link To="虹桥火车站" Line="2号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="上海科技馆" X="1115" Y="834">
+    <Node Name="上海科技馆" X="1116" Y="790">
       <Link To="世纪大道" Line="2号线" Weight="1" Flag="0" />
       <Link To="世纪公园" Line="2号线" Weight="1" Flag="-1" />
     </Node>
@@ -705,7 +705,7 @@
       <Link To="华宁路" Line="5号线" Weight="1" Flag="0" />
       <Link To="闵行开发区" Line="5号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="杨高中路" X="1115" Y="781">
+    <Node Name="杨高中路" X="1116" Y="693">
       <Link To="世纪大道" Line="9号线" Weight="1" Flag="0" />
     </Node>
     <Node Name="中兴路" X="850" Y="570">
@@ -1010,7 +1010,7 @@
       <Link To="上南路" Line="6号线" Weight="1" Flag="0" />
       <Link To="东方体育中心" Line="6号线" Weight="1" Flag="-1" />
     </Node>
-    <Node Name="浦电 路" X="989" Y="832">
+    <Node Name="浦电 路" X="998" Y="851">
       <Link To="世纪大道" Line="6号线" Weight="1" Flag="0" />
       <Link To="蓝村路" Line="6号线" Weight="1" Flag="-1" />
     </Node>
